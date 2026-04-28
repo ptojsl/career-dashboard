@@ -1,907 +1,928 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Job Quest 🎯</title>
+  <title>Job Quest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
     :root {
-      --primary: #5c6ef8;
-      --primary-dark: #4350d4;
-      --primary-light: #eef0ff;
-      --accent: #ff6b35;
-      --green: #58cc02;
-      --yellow: #ffd900;
-      --red: #ff4b4b;
-      --purple: #9b59b6;
-      --bg: #f5f6fa;
+      --ink: #0f0f13;
+      --ink2: #1e1e28;
+      --surface: #f8f8fc;
       --card: #ffffff;
-      --text: #1a1a2e;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --shadow: 0 2px 12px rgba(92,110,248,0.08);
-      --shadow-lg: 0 8px 32px rgba(92,110,248,0.15);
-      --radius: 16px;
-      --radius-sm: 10px;
+      --muted: #8888a0;
+      --border: #e8e8f0;
+      --blue: #3b5bdb;
+      --blue-light: #eef1ff;
+      --green: #2f9e44;
+      --green-light: #ebfbee;
+      --amber: #e67700;
+      --amber-light: #fff4e0;
+      --red: #c92a2a;
+      --red-light: #fff0f0;
+      --purple: #6741d9;
+      --purple-light: #f3f0ff;
+      --teal: #0c8599;
+      --teal-light: #e3fafc;
+      --r: 14px;
+      --r-sm: 9px;
+      --sh: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.05);
+      --sh-lg: 0 8px 32px rgba(0,0,0,.1);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--ink); min-height: 100vh; font-size: 15px; line-height: 1.5; }
+    h1,h2,h3,h4 { font-family: 'Syne', sans-serif; }
 
-    /* ── Login ── */
-    #login-screen { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,#667eea,#764ba2); padding:20px; }
-    .login-card { background:#fff; border-radius:24px; padding:48px 40px; width:100%; max-width:420px; box-shadow:0 24px 64px rgba(0,0,0,.2); text-align:center; }
-    .login-logo { font-size:56px; margin-bottom:12px; display:block; }
-    .login-title { font-size:28px; font-weight:800; margin-bottom:6px; }
-    .login-subtitle { color:var(--muted); margin-bottom:32px; font-size:15px; }
-    .login-input { width:100%; padding:14px 18px; border:2px solid var(--border); border-radius:var(--radius-sm); font-size:16px; outline:none; transition:border-color .2s; margin-bottom:16px; letter-spacing:2px; }
-    .login-input:focus { border-color:var(--primary); }
-    .login-btn { width:100%; padding:14px; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:#fff; border:none; border-radius:var(--radius-sm); font-size:16px; font-weight:700; cursor:pointer; transition:transform .15s,box-shadow .15s; }
-    .login-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(92,110,248,.4); }
-    .login-error { color:var(--red); font-size:14px; margin-top:10px; min-height:20px; }
-    .remember-label { display:flex; align-items:center; gap:8px; font-size:14px; color:var(--muted); margin-bottom:16px; cursor:pointer; justify-content:center; }
+    /* LOGIN */
+    #login-screen { display:flex; align-items:center; justify-content:center; min-height:100vh; background:var(--ink); padding:20px; }
+    .login-card { width:100%; max-width:380px; }
+    .login-mark { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:40px; }
+    .login-mark span { color:#fff; }
+    .login-title { font-size:38px; font-weight:800; color:#fff; line-height:1.1; margin-bottom:8px; }
+    .login-sub { color:var(--muted); font-size:15px; margin-bottom:40px; }
+    .login-input { width:100%; padding:14px 18px; background:#1e1e28; border:1.5px solid #2e2e3e; border-radius:var(--r-sm); font-size:15px; color:#fff; outline:none; transition:border-color .2s; margin-bottom:12px; font-family:'DM Sans',sans-serif; letter-spacing:1px; }
+    .login-input::placeholder { color:#555568; }
+    .login-input:focus { border-color:var(--blue); }
+    .remember-row { display:flex; align-items:center; gap:8px; margin-bottom:20px; cursor:pointer; }
+    .remember-row input { accent-color:var(--blue); width:15px; height:15px; cursor:pointer; }
+    .remember-row span { font-size:13px; color:var(--muted); }
+    .login-btn { width:100%; padding:14px; background:var(--blue); color:#fff; border:none; border-radius:var(--r-sm); font-size:15px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:opacity .2s, transform .15s; }
+    .login-btn:hover { opacity:.9; transform:translateY(-1px); }
+    .login-error { color:#f03e3e; font-size:13px; margin-top:10px; min-height:18px; }
 
-    /* ── App ── */
+    /* SHELL */
     #app { display:none; }
-    .app-header { background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:#fff; padding:0 24px; position:sticky; top:0; z-index:100; box-shadow:0 2px 20px rgba(92,110,248,.3); }
-    .header-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:64px; flex-wrap:wrap; gap:8px; }
-    .header-brand { font-size:22px; font-weight:800; display:flex; align-items:center; gap:8px; }
-    .header-stats { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-    .stat-pill { display:flex; align-items:center; gap:6px; background:rgba(255,255,255,.18); border-radius:20px; padding:6px 14px; font-size:14px; font-weight:700; cursor:pointer; transition:background .2s; white-space:nowrap; }
-    .stat-pill:hover { background:rgba(255,255,255,.28); }
-    .stat-pill .icon { font-size:18px; }
-    .header-actions { display:flex; gap:8px; }
-    .btn-header { padding:7px 14px; background:rgba(255,255,255,.18); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; transition:background .2s; }
-    .btn-header:hover { background:rgba(255,255,255,.3); }
+    .sidebar { position:fixed; top:0; left:0; width:220px; height:100vh; background:var(--ink); display:flex; flex-direction:column; padding:28px 16px; z-index:50; }
+    .brand { font-family:'Syne',sans-serif; font-weight:800; font-size:18px; color:#fff; padding:4px 12px; margin-bottom:36px; display:flex; align-items:center; gap:10px; }
+    .brand-dot { width:8px; height:8px; border-radius:50%; background:var(--blue); flex-shrink:0; }
+    .nav { display:flex; flex-direction:column; gap:4px; flex:1; }
+    .nav-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--r-sm); cursor:pointer; font-size:14px; font-weight:500; color:#8888a0; transition:all .15s; border:none; background:none; width:100%; text-align:left; font-family:'DM Sans',sans-serif; }
+    .nav-item:hover { background:#1e1e28; color:#fff; }
+    .nav-item.active { background:#1e1e28; color:#fff; }
+    .nav-icon { font-size:16px; width:20px; text-align:center; flex-shrink:0; }
+    .nav-badge { margin-left:auto; background:var(--red); color:#fff; border-radius:20px; padding:1px 7px; font-size:11px; font-weight:700; }
+    .sidebar-bottom { margin-top:auto; padding-top:16px; border-top:1px solid #2e2e3e; }
+    .xp-mini { padding:12px; background:#1e1e28; border-radius:var(--r-sm); }
+    .xp-mini-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .xp-mini-level { font-size:12px; color:#fff; font-weight:600; font-family:'Syne',sans-serif; }
+    .xp-mini-pts { font-size:11px; color:var(--muted); }
+    .xp-mini-bar { height:4px; background:#2e2e3e; border-radius:2px; overflow:hidden; }
+    .xp-mini-fill { height:100%; background:var(--blue); border-radius:2px; transition:width .6s ease; }
+    .streak-pill { display:flex; align-items:center; gap:6px; padding:8px 12px; margin-top:8px; font-size:12px; color:var(--muted); font-weight:500; }
+    .streak-pill span { color:#fff; font-weight:700; }
 
-    .main-content { max-width:1200px; margin:0 auto; padding:28px 24px; }
+    .main { margin-left:220px; min-height:100vh; }
+    .topbar { background:var(--card); border-bottom:1px solid var(--border); padding:0 32px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:40; }
+    .topbar-title { font-family:'Syne',sans-serif; font-size:17px; font-weight:700; }
+    .topbar-actions { display:flex; align-items:center; gap:10px; }
+    .btn { padding:8px 18px; border-radius:var(--r-sm); font-size:13px; font-weight:600; cursor:pointer; border:none; transition:all .15s; font-family:'DM Sans',sans-serif; display:inline-flex; align-items:center; gap:5px; }
+    .btn-primary { background:var(--blue); color:#fff; }
+    .btn-primary:hover { background:#2f4bc4; }
+    .btn-ghost { background:transparent; color:var(--ink); border:1.5px solid var(--border); }
+    .btn-ghost:hover { border-color:var(--ink); }
+    .btn-green { background:var(--green); color:#fff; }
+    .btn-green:hover { background:#27823a; }
+    .btn-sm { padding:7px 14px; font-size:13px; }
 
-    /* Quote */
-    .quote-bar { background:linear-gradient(135deg,#667eea22,#764ba222); border:1px solid #667eea33; border-radius:var(--radius); padding:14px 20px; margin-bottom:24px; display:flex; align-items:center; gap:12px; font-size:14px; color:var(--primary-dark); font-style:italic; font-weight:500; }
+    .page { padding:32px; display:none; }
+    .page.active { display:block; }
 
-    /* Overdue banner */
-    .overdue-banner { background:#fff3f3; border:2px solid #ffcccc; border-radius:var(--radius); padding:14px 20px; margin-bottom:20px; display:none; align-items:center; gap:12px; }
-    .overdue-banner.visible { display:flex; }
-    .overdue-banner strong { color:var(--red); }
-    .overdue-list { font-size:13px; color:var(--red); margin-top:4px; }
+    /* DASHBOARD */
+    .dash-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-bottom:28px; }
+    .stat-card { background:var(--card); border-radius:var(--r); padding:20px; box-shadow:var(--sh); border:1px solid var(--border); }
+    .s-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin-bottom:10px; }
+    .s-val { font-family:'Syne',sans-serif; font-size:32px; font-weight:800; line-height:1; }
+    .s-sub { font-size:11px; color:var(--muted); margin-top:6px; }
+    .s-blue .s-val{color:var(--blue)} .s-green .s-val{color:var(--green)} .s-amber .s-val{color:var(--amber)} .s-purple .s-val{color:var(--purple)} .s-red .s-val{color:var(--red)}
 
-    /* Dashboard */
-    .dashboard { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:24px; }
-    .dash-card { background:var(--card); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); display:flex; align-items:center; gap:16px; transition:transform .2s,box-shadow .2s; }
-    .dash-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
-    .dash-icon { width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
-    .dash-icon.blue{background:#eef0ff} .dash-icon.green{background:#e8fbe0} .dash-icon.yellow{background:#fffae0} .dash-icon.red{background:#ffe8e8} .dash-icon.purple{background:#f5e8ff}
-    .dash-info .label { font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
-    .dash-info .value { font-size:26px; font-weight:800; color:var(--text); line-height:1.2; }
+    .dash-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:28px; }
+    .panel { background:var(--card); border-radius:var(--r); padding:24px; box-shadow:var(--sh); border:1px solid var(--border); }
+    .panel-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; }
+    .panel-title em { font-family:'DM Sans',sans-serif; font-style:normal; font-size:12px; font-weight:500; color:var(--muted); }
 
-    /* Level */
-    .level-section { background:var(--card); border-radius:var(--radius); padding:20px 24px; box-shadow:var(--shadow); margin-bottom:24px; }
-    .level-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-    .level-name { font-weight:800; font-size:17px; color:var(--primary); }
-    .level-num { font-size:13px; color:var(--muted); font-weight:600; }
-    .xp-bar-bg { height:14px; background:var(--primary-light); border-radius:8px; overflow:hidden; }
-    .xp-bar-fill { height:100%; background:linear-gradient(90deg,var(--primary),#a855f7); border-radius:8px; transition:width .8s cubic-bezier(.34,1.56,.64,1); }
-    .xp-label { font-size:12px; color:var(--muted); margin-top:6px; text-align:right; }
+    .goal-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .goal-meta strong { font-family:'Syne',sans-serif; font-size:22px; }
+    .goal-edit { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
+    .goal-edit input { width:44px; padding:3px 6px; border:1.5px solid var(--border); border-radius:5px; font-size:12px; text-align:center; outline:none; font-family:'DM Sans',sans-serif; }
+    .goal-edit input:focus { border-color:var(--blue); }
+    .prog-bar { height:10px; background:var(--border); border-radius:5px; overflow:hidden; }
+    .prog-fill { height:100%; border-radius:5px; transition:width .5s ease; }
+    .prog-blue { background:var(--blue); }
+    .prog-green { background:var(--green); }
+    .prog-teal { background:var(--teal); }
+    .goal-hint { font-size:11px; color:var(--muted); margin-top:6px; }
 
-    /* Weekly goal */
-    .goal-section { background:var(--card); border-radius:var(--radius); padding:20px 24px; box-shadow:var(--shadow); margin-bottom:24px; }
-    .goal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px; }
-    .goal-title { font-weight:700; font-size:16px; }
-    .goal-right { display:flex; align-items:center; gap:10px; }
-    .goal-count { font-size:14px; color:var(--muted); font-weight:600; }
-    .goal-input-group { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--muted); }
-    .goal-number-input { width:52px; padding:4px 8px; border:2px solid var(--border); border-radius:6px; font-size:13px; font-weight:700; text-align:center; outline:none; }
-    .goal-number-input:focus { border-color:var(--primary); }
-    .goal-bar-bg { height:12px; background:#e8fbe0; border-radius:8px; overflow:hidden; }
-    .goal-bar-fill { height:100%; background:linear-gradient(90deg,#58cc02,#47b001); border-radius:8px; transition:width .6s ease; }
-    .goal-week-label { font-size:11px; color:var(--muted); margin-top:5px; }
+    .nudge-card { background:var(--ink); border-radius:var(--r); padding:24px 28px; color:#fff; margin-bottom:28px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .nudge-text h3 { font-size:17px; margin-bottom:6px; }
+    .nudge-text p { font-size:13px; color:#888; max-width:420px; line-height:1.6; }
+    .nudge-nums { display:flex; gap:28px; flex-shrink:0; text-align:center; }
+    .nudge-num .nv { font-family:'Syne',sans-serif; font-size:32px; font-weight:800; }
+    .nudge-num .nl { font-size:11px; color:#555; margin-top:2px; }
 
-    /* Pipeline funnel */
-    .funnel-section { background:var(--card); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); margin-bottom:24px; }
-    .funnel-section h2 { font-size:18px; font-weight:800; margin-bottom:18px; }
-    .funnel-chart-wrap { max-height:200px; }
+    /* TOOLBAR */
+    .toolbar { display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+    .search-box { flex:1; min-width:180px; max-width:280px; position:relative; }
+    .search-box input { width:100%; padding:8px 14px 8px 34px; border:1.5px solid var(--border); border-radius:var(--r-sm); font-size:13px; outline:none; background:#fff; font-family:'DM Sans',sans-serif; transition:border-color .2s; }
+    .search-box input:focus { border-color:var(--blue); }
+    .search-icon { position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:14px; pointer-events:none; }
+    .filter-pills { display:flex; gap:6px; flex-wrap:wrap; }
+    .fpill { padding:6px 13px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; border:1.5px solid var(--border); background:#fff; color:var(--muted); transition:all .15s; font-family:'DM Sans',sans-serif; }
+    .fpill.active { border-color:var(--blue); background:var(--blue-light); color:var(--blue); }
+    .fpill.teal.active { border-color:var(--teal); background:var(--teal-light); color:var(--teal); }
+    .ml-auto { margin-left:auto; }
 
-    /* Controls */
-    .controls { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap:12px; flex-wrap:wrap; }
-    .section-title { font-size:20px; font-weight:800; }
-    .controls-right { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .filter-select { padding:8px 14px; border:2px solid var(--border); border-radius:10px; font-size:14px; background:#fff; cursor:pointer; outline:none; font-weight:600; color:var(--text); }
-    .search-input { padding:8px 14px; border:2px solid var(--border); border-radius:10px; font-size:14px; outline:none; width:200px; transition:border-color .2s; }
-    .search-input:focus { border-color:var(--primary); }
-    .btn-add { padding:10px 22px; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:transform .15s,box-shadow .15s; display:flex; align-items:center; gap:6px; }
-    .btn-add:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(92,110,248,.4); }
-    .btn-csv { padding:10px 16px; background:#e8fbe0; color:#2d9200; border:none; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:all .15s; }
-    .btn-csv:hover { background:#58cc02; color:#fff; }
+    /* APPS LIST */
+    .apps-list { display:flex; flex-direction:column; gap:10px; }
+    .app-row { background:var(--card); border-radius:var(--r); padding:16px 20px; box-shadow:var(--sh); border:1px solid var(--border); display:grid; grid-template-columns:2.5fr 1.8fr 130px 100px auto; align-items:center; gap:14px; transition:box-shadow .15s; }
+    .app-row:hover { box-shadow:var(--sh-lg); }
+    .co-name { font-family:'Syne',sans-serif; font-weight:700; font-size:15px; }
+    .role-text { font-size:13px; color:var(--muted); margin-top:2px; }
+    .date-text { font-size:13px; color:var(--muted); }
+    .followup-text { font-size:12px; color:var(--muted); margin-top:3px; }
+    .overdue-chip { display:inline-block; background:var(--red-light); color:var(--red); font-size:10px; font-weight:700; padding:1px 5px; border-radius:4px; margin-left:4px; }
+    .status-chip { padding:4px 11px; border-radius:20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; white-space:nowrap; }
+    .ch-Applied{background:var(--blue-light);color:var(--blue)}
+    .ch-Phone{background:var(--amber-light);color:var(--amber)}
+    .ch-Interview{background:var(--purple-light);color:var(--purple)}
+    .ch-Offer{background:var(--green-light);color:var(--green)}
+    .ch-Rejected{background:var(--red-light);color:var(--red)}
+    .ch-Withdrawn{background:#f1f3f5;color:#868e96}
+    .row-actions { display:flex; gap:6px; }
+    .icon-btn { width:30px; height:30px; border-radius:7px; border:1.5px solid var(--border); background:#fff; cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center; transition:all .15s; }
+    .icon-btn:hover { border-color:var(--ink); }
+    .icon-btn.del:hover { border-color:var(--red); background:var(--red-light); }
 
-    /* App cards */
-    .apps-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
-    .app-card { background:var(--card); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); border-left:4px solid var(--primary); transition:transform .2s,box-shadow .2s; }
-    .app-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
-    .app-card.status-applied{border-left-color:var(--primary)} .app-card.status-phone{border-left-color:var(--yellow)} .app-card.status-interview{border-left-color:var(--purple)} .app-card.status-offer{border-left-color:var(--green)} .app-card.status-rejected{border-left-color:var(--red)} .app-card.status-withdrawn{border-left-color:#9ca3af}
-    .app-header-row { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
-    .app-company { font-size:17px; font-weight:800; color:var(--text); flex:1; }
-    .status-badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; margin-left:8px; }
-    .badge-applied{background:#eef0ff;color:var(--primary)} .badge-phone{background:#fffae0;color:#b8860b} .badge-interview{background:#f5e8ff;color:var(--purple)} .badge-offer{background:#e8fbe0;color:#2d9200} .badge-rejected{background:#ffe8e8;color:var(--red)} .badge-withdrawn{background:#f3f4f6;color:#6b7280}
-    .app-role { font-size:14px; color:var(--primary); font-weight:600; margin-bottom:10px; }
-    .app-meta { display:flex; gap:14px; font-size:12px; color:var(--muted); margin-bottom:10px; flex-wrap:wrap; }
-    .app-meta span { display:flex; align-items:center; gap:4px; }
-    .overdue-tag { background:#ffe8e8; color:var(--red); padding:1px 7px; border-radius:8px; font-size:11px; font-weight:700; }
-    .recruiter-row { font-size:12px; color:var(--muted); margin-bottom:10px; display:flex; flex-wrap:wrap; gap:10px; }
-    .recruiter-row a { color:var(--primary); text-decoration:none; }
-    .recruiter-row a:hover { text-decoration:underline; }
-    .app-notes { font-size:13px; color:var(--muted); line-height:1.5; margin-bottom:14px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-    .app-actions { display:flex; gap:8px; flex-wrap:wrap; }
-    .btn-sm { padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:2px solid transparent; transition:all .15s; }
-    .btn-edit{background:var(--primary-light);color:var(--primary);border-color:var(--primary-light)} .btn-edit:hover{background:var(--primary);color:#fff}
-    .btn-delete{background:#ffe8e8;color:var(--red);border-color:#ffe8e8} .btn-delete:hover{background:var(--red);color:#fff}
-    .empty-state { text-align:center; padding:60px 20px; color:var(--muted); }
-    .empty-icon{font-size:64px;margin-bottom:16px} .empty-title{font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text)} .empty-sub{font-size:15px}
+    /* NETWORK */
+    .net-hero { background:var(--ink); border-radius:var(--r); padding:28px 32px; color:#fff; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .net-hero h2 { font-size:21px; margin-bottom:6px; }
+    .net-hero p { font-size:13px; color:#888; max-width:480px; line-height:1.7; }
+    .net-stats { display:flex; gap:24px; flex-shrink:0; }
+    .net-stat { text-align:center; }
+    .net-stat .nv { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; }
+    .c-teal{color:var(--teal)} .c-green{color:#69db7c} .c-amber{color:#ffd43b}
+    .net-stat .nl { font-size:11px; color:#666; margin-top:2px; }
+    .tip-bar { background:var(--teal-light); border:1px solid #99e9f2; border-radius:var(--r-sm); padding:11px 16px; margin-bottom:18px; font-size:13px; color:var(--teal); display:flex; align-items:center; gap:8px; }
 
-    /* Modal */
-    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; align-items:center; justify-content:center; padding:20px; }
-    .modal-overlay.open { display:flex; }
-    .modal { background:#fff; border-radius:20px; padding:32px; width:100%; max-width:580px; box-shadow:0 24px 64px rgba(0,0,0,.2); max-height:90vh; overflow-y:auto; animation:slideUp .25s ease; }
-    @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
-    .modal-title { font-size:22px; font-weight:800; margin-bottom:24px; }
-    .form-group { margin-bottom:16px; }
-    .form-group label { display:block; font-size:13px; font-weight:700; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px; }
-    .form-input,.form-select,.form-textarea { width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:var(--radius-sm); font-size:15px; outline:none; transition:border-color .2s; font-family:inherit; color:var(--text); }
-    .form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--primary); }
-    .form-textarea { resize:vertical; min-height:80px; }
+    .contacts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:14px; }
+    .contact-card { background:var(--card); border-radius:var(--r); padding:18px 20px; box-shadow:var(--sh); border:1px solid var(--border); transition:box-shadow .15s; }
+    .contact-card:hover { box-shadow:var(--sh-lg); }
+    .contact-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+    .c-avatar { width:40px; height:40px; border-radius:11px; background:var(--blue-light); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:14px; color:var(--blue); flex-shrink:0; }
+    .c-name { font-family:'Syne',sans-serif; font-weight:700; font-size:15px; margin-left:11px; }
+    .c-title { font-size:12px; color:var(--muted); margin-top:2px; }
+    .c-company { font-size:12px; color:var(--blue); font-weight:600; margin-top:1px; }
+    .c-links { display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
+    .c-links a { font-size:12px; color:var(--muted); text-decoration:none; display:flex; align-items:center; gap:5px; }
+    .c-links a:hover { color:var(--blue); }
+    .c-notes { font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .c-footer { display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1px solid var(--border); }
+    .outreach-chip { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+    .oc-None{background:#f1f3f5;color:#868e96}
+    .oc-Contacted{background:var(--amber-light);color:var(--amber)}
+    .oc-Replied{background:var(--green-light);color:var(--green)}
+    .oc-Meeting{background:var(--purple-light);color:var(--purple)}
+    .fu-due { font-size:11px; color:var(--muted); }
+    .fu-due.od { color:var(--red); font-weight:600; }
+
+    /* ACHIEVEMENTS */
+    .ach-header { background:var(--card); border-radius:var(--r); padding:24px; box-shadow:var(--sh); border:1px solid var(--border); margin-bottom:20px; display:flex; gap:40px; flex-wrap:wrap; align-items:center; }
+    .ach-stat .al { font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); font-weight:600; margin-bottom:4px; }
+    .ach-stat .av { font-family:'Syne',sans-serif; font-size:30px; font-weight:800; }
+    .av-blue{color:var(--blue)} .av-purple{color:var(--purple)} .av-amber{color:var(--amber)}
+    .ach-xp-wrap { flex:1; min-width:200px; }
+    .ach-xp-top { display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px; font-weight:600; }
+    .badges-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
+    .badge-tile { background:var(--card); border-radius:var(--r); padding:18px 14px; text-align:center; border:1px solid var(--border); transition:all .2s; }
+    .badge-tile.unlocked { border-color:#ffd43b; background:linear-gradient(135deg,#fffde7,#fff); }
+    .badge-tile.locked { opacity:.35; filter:grayscale(.8); }
+    .be { font-size:28px; margin-bottom:8px; }
+    .bn { font-family:'Syne',sans-serif; font-size:12px; font-weight:700; }
+    .bd { font-size:11px; color:var(--muted); margin-top:3px; }
+
+    /* MODAL */
+    .overlay { display:none; position:fixed; inset:0; background:rgba(15,15,19,.6); backdrop-filter:blur(4px); z-index:200; align-items:center; justify-content:center; padding:20px; }
+    .overlay.open { display:flex; }
+    .modal { background:#fff; border-radius:18px; padding:32px; width:100%; max-width:560px; box-shadow:var(--sh-lg); max-height:92vh; overflow-y:auto; animation:popIn .2s ease; }
+    @keyframes popIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+    .modal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+    .modal-head h2 { font-size:20px; }
+    .modal-close { width:32px; height:32px; border-radius:8px; border:1.5px solid var(--border); background:#fff; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; color:var(--muted); transition:all .15s; }
+    .modal-close:hover { border-color:var(--ink); color:var(--ink); }
     .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     .form-row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
-    .form-section-label { font-size:13px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1px; margin:18px 0 12px; padding-bottom:6px; border-bottom:2px solid var(--primary-light); }
-    .modal-actions { display:flex; gap:10px; margin-top:24px; }
-    .btn-primary { flex:1; padding:13px; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:#fff; border:none; border-radius:var(--radius-sm); font-size:15px; font-weight:700; cursor:pointer; transition:transform .15s; }
-    .btn-primary:hover { transform:translateY(-1px); }
-    .btn-cancel { padding:13px 24px; background:var(--bg); color:var(--muted); border:2px solid var(--border); border-radius:var(--radius-sm); font-size:15px; font-weight:700; cursor:pointer; }
+    .fg { margin-bottom:14px; }
+    .fg label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); margin-bottom:5px; }
+    .fi, .fs, .ft { width:100%; padding:10px 13px; border:1.5px solid var(--border); border-radius:var(--r-sm); font-size:14px; outline:none; transition:border-color .2s; font-family:'DM Sans',sans-serif; color:var(--ink); background:#fff; }
+    .fi:focus, .fs:focus, .ft:focus { border-color:var(--blue); }
+    .ft { resize:vertical; min-height:70px; }
+    .form-section { font-family:'Syne',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--blue); margin:18px 0 12px; padding-bottom:7px; border-bottom:1.5px solid var(--blue-light); }
+    .modal-footer { display:flex; gap:10px; margin-top:22px; }
+    .btn-cancel { padding:11px 20px; background:var(--surface); color:var(--muted); border:1.5px solid var(--border); border-radius:var(--r-sm); font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+    .btn-save { flex:1; padding:11px; background:var(--blue); color:#fff; border:none; border-radius:var(--r-sm); font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:background .15s; }
+    .btn-save:hover { background:#2f4bc4; }
 
-    /* Achievements */
-    .achievements-section { margin-top:32px; }
-    .achievements-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-top:16px; }
-    .badge-card { background:var(--card); border-radius:var(--radius); padding:16px 12px; text-align:center; box-shadow:var(--shadow); transition:transform .2s; }
-    .badge-card:hover { transform:scale(1.04); }
-    .badge-card.locked { opacity:.4; filter:grayscale(1); }
-    .badge-card.unlocked { background:linear-gradient(135deg,#fff9c4,#fff); border:2px solid var(--yellow); }
-    .badge-emoji{font-size:32px;margin-bottom:8px} .badge-name{font-size:12px;font-weight:700;color:var(--text)} .badge-desc{font-size:11px;color:var(--muted);margin-top:3px}
-
-    /* Weekly Recap Modal */
-    .recap-modal { max-width:480px; }
-    .recap-stat-row { display:flex; gap:12px; margin:16px 0; flex-wrap:wrap; }
-    .recap-stat { flex:1; min-width:80px; background:var(--primary-light); border-radius:12px; padding:14px; text-align:center; }
-    .recap-stat .rv { font-size:28px; font-weight:800; color:var(--primary); }
-    .recap-stat .rl { font-size:12px; color:var(--muted); margin-top:2px; font-weight:600; }
-    .btn-email { width:100%; padding:13px; background:linear-gradient(135deg,#58cc02,#47b001); color:#fff; border:none; border-radius:var(--radius-sm); font-size:15px; font-weight:700; cursor:pointer; margin-top:12px; transition:transform .15s; }
-    .btn-email:hover { transform:translateY(-1px); }
-
-    /* Toast */
-    #toast-container { position:fixed; bottom:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
-    .toast { background:#fff; border-radius:16px; padding:16px 20px; box-shadow:0 8px 32px rgba(0,0,0,.15); display:flex; align-items:center; gap:14px; max-width:340px; animation:toastIn .4s cubic-bezier(.34,1.56,.64,1); border-left:4px solid var(--yellow); }
-    @keyframes toastIn { from{opacity:0;transform:translateX(80px)} to{opacity:1;transform:translateX(0)} }
-    .toast-icon{font-size:28px} .toast-text .toast-title{font-weight:800;font-size:15px;color:var(--text)} .toast-text .toast-sub{font-size:13px;color:var(--muted);margin-top:2px}
+    /* TOAST */
+    #toasts { position:fixed; bottom:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:8px; }
+    .toast { background:#fff; border-radius:12px; padding:13px 17px; box-shadow:var(--sh-lg); display:flex; align-items:center; gap:11px; max-width:310px; animation:slideIn .3s cubic-bezier(.34,1.56,.64,1); border-left:3px solid var(--blue); }
+    @keyframes slideIn { from{opacity:0;transform:translateX(50px)} to{opacity:1;transform:translateX(0)} }
+    .t-icon { font-size:20px; }
+    .t-title { font-weight:700; font-size:13px; }
+    .t-sub { font-size:12px; color:var(--muted); margin-top:1px; }
 
     #confetti-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999; }
 
-    @media(max-width:600px) {
-      .header-stats{gap:8px} .stat-pill{padding:5px 10px;font-size:12px}
-      .dashboard{grid-template-columns:repeat(2,1fr)} .form-row,.form-row-3{grid-template-columns:1fr}
-      .controls{flex-direction:column;align-items:stretch} .controls-right{justify-content:space-between}
-      .apps-grid{grid-template-columns:1fr} .modal{padding:24px 18px}
-      .header-inner{height:auto;padding:10px 0}
+    .overdue-banner { background:var(--red-light); border:1px solid #ffc9c9; border-radius:var(--r-sm); padding:11px 16px; margin-bottom:20px; font-size:13px; color:var(--red); display:none; align-items:center; gap:10px; }
+    .overdue-banner.show { display:flex; }
+
+    .empty { text-align:center; padding:56px 20px; color:var(--muted); }
+    .empty .ei { font-size:42px; margin-bottom:14px; }
+    .empty h3 { font-size:17px; font-weight:700; color:var(--ink); margin-bottom:6px; font-family:'Syne',sans-serif; }
+    .empty p { font-size:13px; max-width:300px; margin:0 auto 18px; }
+
+    @media(max-width:900px){
+      .sidebar{width:64px;padding:20px 10px}
+      .brand-text,.nav-label,.sidebar-bottom{display:none}
+      .main{margin-left:64px}
+      .dash-grid{grid-template-columns:repeat(3,1fr)}
+      .dash-row{grid-template-columns:1fr}
+      .app-row{grid-template-columns:1fr auto}
+      .app-row .date-col,.app-row .status-col{display:none}
+    }
+    @media(max-width:600px){
+      .page{padding:20px 16px}
+      .topbar{padding:0 16px}
+      .dash-grid{grid-template-columns:repeat(2,1fr)}
+      .form-row,.form-row-3{grid-template-columns:1fr}
+      .net-hero{flex-direction:column}
+      .net-stats{width:100%;justify-content:space-around}
+      .nudge-card{flex-direction:column}
     }
   </style>
 </head>
 <body>
 
-<!-- Login -->
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-card">
-    <span class="login-logo">🎯</span>
-    <h1 class="login-title">Job Quest</h1>
-    <p class="login-subtitle">Your personal job hunt command center</p>
-    <input type="password" id="password-input" class="login-input" placeholder="Enter your password" autocomplete="current-password"/>
-    <label class="remember-label" for="remember-check"><input type="checkbox" id="remember-check" checked/> Remember this computer</label>
-    <button class="login-btn" onclick="attemptLogin()">🚀 Enter Job Quest</button>
-    <div class="login-error" id="login-error"></div>
+    <div class="login-mark"><span>Job</span> Quest</div>
+    <h1 class="login-title">Your search,<br/>organized.</h1>
+    <p class="login-sub">Track applications, build your network, land the role.</p>
+    <input type="password" id="pw-input" class="login-input" placeholder="Password" autocomplete="current-password"/>
+    <label class="remember-row" for="remember-cb">
+      <input type="checkbox" id="remember-cb" checked/>
+      <span>Remember this device</span>
+    </label>
+    <button class="login-btn" onclick="doLogin()">Sign in →</button>
+    <div class="login-error" id="login-err"></div>
   </div>
 </div>
 
-<!-- App -->
+<!-- APP -->
 <div id="app">
-  <header class="app-header">
-    <div class="header-inner">
-      <div class="header-brand">🎯 Job Quest</div>
-      <div class="header-stats">
-        <div class="stat-pill" title="Day Streak"><span class="icon">🔥</span><span id="streak-count">0</span></div>
-        <div class="stat-pill" title="Total XP"><span class="icon">⭐</span><span id="xp-count">0</span></div>
-        <div class="stat-pill" title="Level"><span class="icon">🏅</span><span id="level-label">Lv 1</span></div>
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-dot"></div><span class="brand-text">Job Quest</span></div>
+    <nav class="nav">
+      <button class="nav-item active" onclick="setPage('dashboard',this)"><span class="nav-icon">▦</span><span class="nav-label">Dashboard</span></button>
+      <button class="nav-item" onclick="setPage('applications',this)"><span class="nav-icon">📋</span><span class="nav-label">Applications</span></button>
+      <button class="nav-item" onclick="setPage('network',this)"><span class="nav-icon">🤝</span><span class="nav-label">Network</span><span class="nav-badge" id="net-badge" style="display:none">!</span></button>
+      <button class="nav-item" onclick="setPage('achievements',this)"><span class="nav-icon">🏆</span><span class="nav-label">Achievements</span></button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="xp-mini">
+        <div class="xp-mini-top">
+          <div class="xp-mini-level" id="sb-level">Level 1</div>
+          <div class="xp-mini-pts" id="sb-xp">0 XP</div>
+        </div>
+        <div class="xp-mini-bar"><div class="xp-mini-fill" id="sb-xp-bar" style="width:0%"></div></div>
       </div>
-      <div class="header-actions">
-        <button class="btn-header" onclick="showRecapModal()">📊 Weekly Recap</button>
+      <div class="streak-pill">🔥 Streak: <span id="sb-streak">0</span> days</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" onclick="exportCSV()">↓ CSV</button>
+        <button class="btn btn-ghost btn-sm" onclick="showRecap()">📊 Recap</button>
+        <button class="btn btn-primary btn-sm" id="topbar-add-btn" onclick="openAppModal()">+ Add Application</button>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main class="main-content">
-    <div class="quote-bar"><span>💬</span><span id="quote-text"></span></div>
-
-    <!-- Overdue banner -->
-    <div class="overdue-banner" id="overdue-banner">
-      <span style="font-size:22px">⚠️</span>
-      <div>
-        <strong>Follow-up overdue!</strong>
-        <div class="overdue-list" id="overdue-list"></div>
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="dash-grid">
+        <div class="stat-card s-blue"><div class="s-label">Applied</div><div class="s-val" id="d-total">0</div><div class="s-sub">total</div></div>
+        <div class="stat-card s-amber"><div class="s-label">Phone Screens</div><div class="s-val" id="d-phone">0</div><div class="s-sub">in progress</div></div>
+        <div class="stat-card s-purple"><div class="s-label">Interviews</div><div class="s-val" id="d-interview">0</div><div class="s-sub">active</div></div>
+        <div class="stat-card s-green"><div class="s-label">Offers</div><div class="s-val" id="d-offer">0</div><div class="s-sub">🎉</div></div>
+        <div class="stat-card s-red"><div class="s-label">Rejections</div><div class="s-val" id="d-rejected">0</div><div class="s-sub">keep going</div></div>
       </div>
-    </div>
 
-    <!-- Dashboard -->
-    <div class="dashboard">
-      <div class="dash-card"><div class="dash-icon blue">📨</div><div class="dash-info"><div class="label">Total Applied</div><div class="value" id="stat-total">0</div></div></div>
-      <div class="dash-card"><div class="dash-icon yellow">📞</div><div class="dash-info"><div class="label">Phone Screens</div><div class="value" id="stat-phone">0</div></div></div>
-      <div class="dash-card"><div class="dash-icon purple">💼</div><div class="dash-info"><div class="label">Interviews</div><div class="value" id="stat-interview">0</div></div></div>
-      <div class="dash-card"><div class="dash-icon green">🎉</div><div class="dash-info"><div class="label">Offers</div><div class="value" id="stat-offer">0</div></div></div>
-      <div class="dash-card"><div class="dash-icon red">❌</div><div class="dash-info"><div class="label">Rejections</div><div class="value" id="stat-rejected">0</div></div></div>
-    </div>
+      <div class="overdue-banner" id="overdue-banner"><span>⚠️</span><div id="overdue-text"></div></div>
 
-    <!-- Level bar -->
-    <div class="level-section">
-      <div class="level-top">
-        <span class="level-name" id="level-name-display">Rookie Applicant</span>
-        <span class="level-num" id="level-progress-label">Level 1</span>
+      <div class="nudge-card">
+        <div class="nudge-text">
+          <h3>Your network is your biggest asset.</h3>
+          <p>Up to 80% of jobs are filled through referrals. Every contact you add, every message you send, every coffee chat you book — it compounds. Track your outreach and follow up consistently.</p>
+          <button class="btn btn-sm" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);margin-top:14px" onclick="setPageByName('network')">Go to Network →</button>
+        </div>
+        <div class="nudge-nums">
+          <div class="nudge-num"><div class="nv" style="color:var(--teal)" id="nudge-contacts">0</div><div class="nl">contacts</div></div>
+          <div class="nudge-num"><div class="nv" style="color:#69db7c" id="nudge-replied">0</div><div class="nl">replied</div></div>
+        </div>
       </div>
-      <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
-      <div class="xp-label" id="xp-detail">0 / 100 XP to Level 2</div>
-    </div>
 
-    <!-- Weekly Goal -->
-    <div class="goal-section">
-      <div class="goal-header">
-        <span class="goal-title">🎯 Weekly Goal</span>
-        <div class="goal-right">
-          <span class="goal-count" id="goal-count-label">0 / 10 this week</span>
-          <div class="goal-input-group">
-            <label for="goal-input" style="font-size:13px;color:var(--muted);">Goal:</label>
-            <input type="number" class="goal-number-input" id="goal-input" min="1" max="100" value="10" onchange="updateGoal()"/>/ week
+      <div class="dash-row">
+        <div class="panel">
+          <div class="panel-title">Weekly Goals <em id="goal-week-range"></em></div>
+          <div style="margin-bottom:20px">
+            <div class="goal-meta">
+              <strong id="goal-done">0 applications</strong>
+              <div class="goal-edit">Goal: <input type="number" id="goal-num" value="10" min="1" max="100" onchange="updateGoal()"/> /wk</div>
+            </div>
+            <div class="prog-bar"><div class="prog-fill prog-green" id="goal-bar" style="width:0%"></div></div>
+            <div class="goal-hint" id="goal-hint"></div>
+          </div>
+          <div>
+            <div class="goal-meta">
+              <strong id="net-goal-done">0 new contacts</strong>
+              <div class="goal-edit">Goal: <input type="number" id="net-goal-num" value="5" min="1" max="50" onchange="updateNetGoal()"/> /wk</div>
+            </div>
+            <div class="prog-bar"><div class="prog-fill prog-teal" id="net-goal-bar" style="width:0%"></div></div>
+            <div class="goal-hint" id="net-goal-hint"></div>
           </div>
         </div>
-      </div>
-      <div class="goal-bar-bg"><div class="goal-bar-fill" id="goal-bar" style="width:0%"></div></div>
-      <div class="goal-week-label" id="goal-week-label"></div>
-    </div>
-
-    <!-- Pipeline Funnel -->
-    <div class="funnel-section">
-      <h2>📈 Application Pipeline</h2>
-      <div class="funnel-chart-wrap">
-        <canvas id="funnel-chart"></canvas>
+        <div class="panel">
+          <div class="panel-title">Pipeline</div>
+          <div style="height:170px"><canvas id="funnel-chart"></canvas></div>
+        </div>
       </div>
     </div>
 
-    <!-- Controls -->
-    <div class="controls">
-      <h2 class="section-title">Applications</h2>
-      <div class="controls-right">
-        <input class="search-input" id="search-input" placeholder="🔍 Search..." oninput="renderApps()"/>
-        <select class="filter-select" id="status-filter" onchange="renderApps()">
-          <option value="">All Statuses</option>
-          <option value="Applied">Applied</option>
-          <option value="Phone Screen">Phone Screen</option>
-          <option value="Interview">Interview</option>
-          <option value="Offer">Offer</option>
-          <option value="Rejected">Rejected</option>
-          <option value="Withdrawn">Withdrawn</option>
-        </select>
-        <button class="btn-csv" onclick="exportCSV()">⬇️ Export CSV</button>
-        <button class="btn-add" onclick="openModal()">＋ Add Application</button>
+    <!-- APPLICATIONS -->
+    <div class="page" id="page-applications">
+      <div class="toolbar">
+        <div class="search-box"><span class="search-icon">⌕</span><input id="app-search" placeholder="Search companies, roles..." oninput="renderApps()"/></div>
+        <div class="filter-pills">
+          <button class="fpill active" data-status="" onclick="setFilter(this)">All</button>
+          <button class="fpill" data-status="Applied" onclick="setFilter(this)">Applied</button>
+          <button class="fpill" data-status="Phone Screen" onclick="setFilter(this)">Phone Screen</button>
+          <button class="fpill" data-status="Interview" onclick="setFilter(this)">Interview</button>
+          <button class="fpill" data-status="Offer" onclick="setFilter(this)">Offer</button>
+          <button class="fpill" data-status="Rejected" onclick="setFilter(this)">Rejected</button>
+        </div>
+        <button class="btn btn-primary btn-sm ml-auto" onclick="openAppModal()">+ Add</button>
       </div>
+      <div class="apps-list" id="apps-list"></div>
     </div>
 
-    <div class="apps-grid" id="apps-grid"></div>
+    <!-- NETWORK -->
+    <div class="page" id="page-network">
+      <div class="net-hero">
+        <div>
+          <h2>Your Network is Your Net Worth</h2>
+          <p>Referrals fill up to 80% of open roles. Track every person you reach out to, follow up on time, and turn warm connections into real opportunities. One intro can change everything.</p>
+        </div>
+        <div class="net-stats">
+          <div class="net-stat"><div class="nv c-teal" id="ns-total">0</div><div class="nl">contacts</div></div>
+          <div class="net-stat"><div class="nv c-green" id="ns-replied">0</div><div class="nl">replied</div></div>
+          <div class="net-stat"><div class="nv c-amber" id="ns-meetings">0</div><div class="nl">meetings</div></div>
+        </div>
+      </div>
 
-    <!-- Achievements -->
-    <div class="achievements-section">
-      <h2 class="section-title">🏆 Achievements</h2>
-      <div class="achievements-grid" id="achievements-grid"></div>
+      <div class="tip-bar" id="tip-bar">
+        <span>💡</span><div><strong>Tip:</strong> <span id="net-tip-text"></span></div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-box"><span class="search-icon">⌕</span><input id="net-search" placeholder="Search contacts..." oninput="renderContacts()"/></div>
+        <div class="filter-pills">
+          <button class="fpill teal active" data-out="" onclick="setNetFilter(this)">All</button>
+          <button class="fpill teal" data-out="None" onclick="setNetFilter(this)">Not Contacted</button>
+          <button class="fpill teal" data-out="Contacted" onclick="setNetFilter(this)">Contacted</button>
+          <button class="fpill teal" data-out="Replied" onclick="setNetFilter(this)">Replied</button>
+          <button class="fpill teal" data-out="Meeting" onclick="setNetFilter(this)">Meeting Set</button>
+        </div>
+        <button class="btn btn-green btn-sm ml-auto" onclick="openContactModal()">+ Add Contact</button>
+      </div>
+      <div class="contacts-grid" id="contacts-grid"></div>
     </div>
-  </main>
+
+    <!-- ACHIEVEMENTS -->
+    <div class="page" id="page-achievements">
+      <div class="ach-header">
+        <div class="ach-stat"><div class="al">Level</div><div class="av av-blue" id="ach-level">1</div></div>
+        <div class="ach-xp-wrap">
+          <div class="ach-xp-top"><span id="ach-level-name">Rookie Applicant</span><span style="color:var(--muted)" id="ach-xp-label">0/100 XP</span></div>
+          <div class="prog-bar"><div class="prog-fill prog-blue" id="ach-xp-bar" style="width:0%"></div></div>
+        </div>
+        <div class="ach-stat"><div class="al">Total XP</div><div class="av av-purple" id="ach-xp">0</div></div>
+        <div class="ach-stat"><div class="al">Streak</div><div class="av av-amber" id="ach-streak">0 🔥</div></div>
+      </div>
+      <div class="badges-grid" id="badges-grid"></div>
+    </div>
+  </div>
 </div>
 
-<!-- Add/Edit Modal -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
-  <div class="modal" role="dialog">
-    <h2 class="modal-title" id="modal-title">Add Application</h2>
-    <form onsubmit="saveApplication(event)">
-      <div class="form-section-label">📋 Job Details</div>
+<!-- APP MODAL -->
+<div class="overlay" id="app-overlay" onclick="closeBgApp(event)">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-head"><h2 id="app-modal-title">Add Application</h2><button class="modal-close" onclick="closeAppModal()">✕</button></div>
+    <form onsubmit="saveApp(event)">
+      <div class="form-section">Job Details</div>
       <div class="form-row">
-        <div class="form-group"><label for="field-company">Company *</label><input class="form-input" id="field-company" placeholder="Google, Meta, ..." required/></div>
-        <div class="form-group"><label for="field-role">Role *</label><input class="form-input" id="field-role" placeholder="Software Engineer" required/></div>
+        <div class="fg"><label for="f-company">Company *</label><input class="fi" id="f-company" placeholder="Google, Stripe..." required/></div>
+        <div class="fg"><label for="f-role">Role *</label><input class="fi" id="f-role" placeholder="Software Engineer" required/></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label for="field-date">Date Applied *</label><input class="form-input" type="date" id="field-date" required/></div>
-        <div class="form-group"><label for="field-status">Status</label>
-          <select class="form-select" id="field-status">
-            <option value="Applied">Applied</option>
-            <option value="Phone Screen">Phone Screen</option>
-            <option value="Interview">Interview</option>
-            <option value="Offer">Offer</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Withdrawn">Withdrawn</option>
-          </select>
+        <div class="fg"><label for="f-date">Date Applied *</label><input class="fi" type="date" id="f-date" required/></div>
+        <div class="fg"><label for="f-status">Status</label>
+          <select class="fs" id="f-status"><option>Applied</option><option>Phone Screen</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Withdrawn</option></select>
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label for="field-url">Job Listing URL</label><input class="form-input" id="field-url" type="url" placeholder="https://..."/></div>
-        <div class="form-group"><label for="field-followup">⏰ Follow-up By</label><input class="form-input" type="date" id="field-followup"/></div>
+        <div class="fg"><label for="f-url">Listing URL</label><input class="fi" id="f-url" type="url" placeholder="https://..."/></div>
+        <div class="fg"><label for="f-followup">Follow-up By</label><input class="fi" type="date" id="f-followup"/></div>
       </div>
-
-      <div class="form-section-label">👤 Recruiter / Contact</div>
+      <div class="form-section">Recruiter / Contact</div>
       <div class="form-row-3">
-        <div class="form-group"><label for="field-rec-name">Name</label><input class="form-input" id="field-rec-name" placeholder="Jane Smith"/></div>
-        <div class="form-group"><label for="field-rec-email">Email</label><input class="form-input" type="email" id="field-rec-email" placeholder="jane@company.com"/></div>
-        <div class="form-group"><label for="field-rec-linkedin">LinkedIn</label><input class="form-input" id="field-rec-linkedin" placeholder="linkedin.com/in/..."/></div>
+        <div class="fg"><label for="f-rec-name">Name</label><input class="fi" id="f-rec-name" placeholder="Jane Smith"/></div>
+        <div class="fg"><label for="f-rec-email">Email</label><input class="fi" type="email" id="f-rec-email" placeholder="jane@co.com"/></div>
+        <div class="fg"><label for="f-rec-li">LinkedIn</label><input class="fi" id="f-rec-li" placeholder="linkedin.com/in/..."/></div>
       </div>
-
-      <div class="form-section-label">📝 Notes</div>
-      <div class="form-group"><textarea class="form-textarea" id="field-notes" placeholder="Salary range, how you heard about it, interview notes..."></textarea></div>
-
-      <div class="modal-actions">
-        <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
-        <button type="submit" class="btn-primary" id="modal-save-btn">Save Application</button>
+      <div class="form-section">Notes</div>
+      <div class="fg"><textarea class="ft" id="f-notes" placeholder="Salary, how you heard about it, prep notes..."></textarea></div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeAppModal()">Cancel</button>
+        <button type="submit" class="btn-save" id="app-save-btn">Save Application</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- Weekly Recap Modal -->
-<div class="modal-overlay" id="recap-overlay" onclick="closeRecapOnBg(event)">
-  <div class="modal recap-modal" role="dialog">
-    <h2 class="modal-title">📊 Weekly Recap</h2>
-    <p style="color:var(--muted);font-size:14px" id="recap-week-label"></p>
-    <div class="recap-stat-row">
-      <div class="recap-stat"><div class="rv" id="recap-applied">0</div><div class="rl">Applied</div></div>
-      <div class="recap-stat"><div class="rv" id="recap-interviews">0</div><div class="rl">Interviews</div></div>
-      <div class="recap-stat"><div class="rv" id="recap-offers">0</div><div class="rl">Offers</div></div>
-      <div class="recap-stat"><div class="rv" id="recap-streak">0</div><div class="rl">🔥 Streak</div></div>
-    </div>
-    <p style="font-size:13px;color:var(--muted);margin-top:8px" id="recap-summary"></p>
-    <button class="btn-email" onclick="emailRecap()">📧 Email Recap to Myself</button>
-    <button class="btn-cancel" style="width:100%;margin-top:8px" onclick="closeRecap()">Close</button>
+<!-- CONTACT MODAL -->
+<div class="overlay" id="contact-overlay" onclick="closeBgContact(event)">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-head"><h2 id="contact-modal-title">Add Contact</h2><button class="modal-close" onclick="closeContactModal()">✕</button></div>
+    <form onsubmit="saveContact(event)">
+      <div class="form-section">Person</div>
+      <div class="form-row">
+        <div class="fg"><label for="c-name">Full Name *</label><input class="fi" id="c-name" placeholder="Alex Johnson" required/></div>
+        <div class="fg"><label for="c-title">Job Title</label><input class="fi" id="c-title" placeholder="Senior Engineer"/></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label for="c-company">Company</label><input class="fi" id="c-company" placeholder="Stripe"/></div>
+        <div class="fg"><label for="c-relationship">How You Know Them</label>
+          <select class="fs" id="c-relationship">
+            <option value="">Select...</option>
+            <option>Former colleague</option><option>Met at event</option><option>LinkedIn outreach</option><option>Mutual connection</option><option>Alumni network</option><option>Recruiter</option><option>Friend</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-section">Contact Info</div>
+      <div class="form-row-3">
+        <div class="fg"><label for="c-email">Email</label><input class="fi" type="email" id="c-email" placeholder="alex@co.com"/></div>
+        <div class="fg"><label for="c-linkedin">LinkedIn</label><input class="fi" id="c-linkedin" placeholder="linkedin.com/in/..."/></div>
+        <div class="fg"><label for="c-phone">Phone</label><input class="fi" id="c-phone" placeholder="+1 555..."/></div>
+      </div>
+      <div class="form-section">Outreach</div>
+      <div class="form-row">
+        <div class="fg"><label for="c-outreach">Status</label>
+          <select class="fs" id="c-outreach">
+            <option value="None">Not yet contacted</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Replied">They replied</option>
+            <option value="Meeting">Meeting set</option>
+          </select>
+        </div>
+        <div class="fg"><label for="c-followup">Follow-up Date</label><input class="fi" type="date" id="c-followup"/></div>
+      </div>
+      <div class="fg"><label for="c-notes">Notes</label><textarea class="ft" id="c-notes" placeholder="How you met, what you discussed, referral potential..."></textarea></div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeContactModal()">Cancel</button>
+        <button type="submit" class="btn-save" id="contact-save-btn">Save Contact</button>
+      </div>
+    </form>
   </div>
 </div>
 
-<div id="toast-container"></div>
+<!-- RECAP MODAL -->
+<div class="overlay" id="recap-overlay" onclick="closeBgRecap(event)">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head"><h2>Weekly Recap</h2><button class="modal-close" onclick="closeRecap()">✕</button></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px" id="recap-range"></p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:var(--blue-light);border-radius:10px;padding:16px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--blue)" id="r-applied">0</div><div style="font-size:11px;color:var(--muted);margin-top:3px">Applied</div></div>
+      <div style="background:var(--teal-light);border-radius:10px;padding:16px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--teal)" id="r-contacts">0</div><div style="font-size:11px;color:var(--muted);margin-top:3px">New Contacts</div></div>
+      <div style="background:var(--purple-light);border-radius:10px;padding:16px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--purple)" id="r-interviews">0</div><div style="font-size:11px;color:var(--muted);margin-top:3px">Interviews</div></div>
+      <div style="background:var(--amber-light);border-radius:10px;padding:16px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--amber)" id="r-streak">0</div><div style="font-size:11px;color:var(--muted);margin-top:3px">🔥 Streak</div></div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px" id="r-summary"></p>
+    <button class="btn-save" style="width:100%;margin-bottom:8px" onclick="emailRecap()">📧 Email this recap</button>
+    <button class="btn-cancel" style="width:100%" onclick="closeRecap()">Close</button>
+  </div>
+</div>
+
+<div id="toasts"></div>
 <canvas id="confetti-canvas"></canvas>
 
 <script type="module">
-  import { initializeApp }       from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getFirestore, collection, addDoc, updateDoc, deleteDoc,
-           doc, onSnapshot, query, orderBy, setDoc, getDoc }
-                                 from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc,
+         doc, onSnapshot, query, orderBy, setDoc, getDoc }
+         from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-  /* ════════════════════════════════════════════════════
-     🔥  FIREBASE CONFIG
-  ════════════════════════════════════════════════════ */
-  const firebaseConfig = {
-    apiKey:            "AIzaSyCkbE3AapkRdZrjYduSiMnDN0xD0_BiUZU",
-    authDomain:        "job-tracker-e70e1.firebaseapp.com",
-    projectId:         "job-tracker-e70e1",
-    storageBucket:     "job-tracker-e70e1.firebasestorage.app",
-    messagingSenderId: "137990071962",
-    appId:             "1:137990071962:web:944707b2667ff11757a123"
-  };
+const FB = {
+  apiKey:"AIzaSyCkbE3AapkRdZrjYduSiMnDN0xD0_BiUZU",
+  authDomain:"job-tracker-e70e1.firebaseapp.com",
+  projectId:"job-tracker-e70e1",
+  storageBucket:"job-tracker-e70e1.firebasestorage.app",
+  messagingSenderId:"137990071962",
+  appId:"1:137990071962:web:944707b2667ff11757a123"
+};
+const PW_HASH = "72a4518532b9d3b63bb81bba9c4f36c21fe7db59df3d4dbd3272ab51057c83de";
 
-  /* ─── PASSWORD HASH (SHA-256) ─── */
-  const PASSWORD_HASH = "72a4518532b9d3b63bb81bba9c4f36c21fe7db59df3d4dbd3272ab51057c83de";
+const fbApp = initializeApp(FB);
+const db = getFirestore(fbApp);
 
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-  const APPS_COL = 'applications';
+let apps=[], contacts=[], editAppId=null, editContactId=null, funnelChart=null;
+let activeFilter='', activeNetFilter='';
+let stats={ xp:0,level:1,streak:0,lastDay:null,earnedBadges:[],weeklyGoal:10,netWeeklyGoal:5 };
 
-  let applications = [];
-  let editingId    = null;
-  let funnelChart  = null;
-  let stats = { xp:0, level:1, streak:0, lastApplied:null, earnedBadges:[], lastDay:null, weeklyGoal:10 };
+const LEVELS=[
+  {l:1,name:"Rookie Applicant",xp:100},{l:2,name:"Resume Warrior",xp:250},
+  {l:3,name:"Application Pro",xp:500},{l:4,name:"Interview Hunter",xp:800},
+  {l:5,name:"Networking Ninja",xp:1200},{l:6,name:"Industry Expert",xp:1800},
+  {l:7,name:"Offer Magnet",xp:2500},{l:8,name:"Career Champion",xp:Infinity}
+];
+const BADGES=[
+  {id:'first_app', e:'🎯',n:'First Shot',    d:'Submit first application',     ok:(s,a,c)=>a.length>=1},
+  {id:'app_5',     e:'🖐️',n:'High Five',     d:'5 applications sent',          ok:(s,a,c)=>a.length>=5},
+  {id:'app_25',    e:'📝',n:'Prolific',       d:'25 applications sent',         ok:(s,a,c)=>a.length>=25},
+  {id:'app_50',    e:'🚀',n:'Rocket Launch',  d:'50 applications sent',         ok:(s,a,c)=>a.length>=50},
+  {id:'app_100',   e:'💯',n:'Century',        d:'100 applications!',            ok:(s,a,c)=>a.length>=100},
+  {id:'streak_3',  e:'🔥',n:'On Fire',        d:'3-day streak',                 ok:(s,a,c)=>s.streak>=3},
+  {id:'streak_7',  e:'⚡',n:'Lightning',      d:'7-day streak',                 ok:(s,a,c)=>s.streak>=7},
+  {id:'streak_30', e:'💎',n:'Diamond',        d:'30-day streak',                ok:(s,a,c)=>s.streak>=30},
+  {id:'phone',     e:'📞',n:'Phone Pro',      d:'First phone screen',           ok:(s,a,c)=>a.some(x=>x.status==='Phone Screen')},
+  {id:'interview', e:'💼',n:'Interview Ready',d:'Got first interview',          ok:(s,a,c)=>a.some(x=>x.status==='Interview')},
+  {id:'offer',     e:'🏆',n:'The Dream',      d:'Received an offer!',           ok:(s,a,c)=>a.some(x=>x.status==='Offer')},
+  {id:'level_3',   e:'🌟',n:'Rising Star',    d:'Reached Level 3',              ok:(s,a,c)=>s.level>=3},
+  {id:'level_5',   e:'👑',n:'Elite',          d:'Reached Level 5',              ok:(s,a,c)=>s.level>=5},
+  {id:'level_8',   e:'🦄',n:'Legendary',      d:'Max Level 8',                  ok:(s,a,c)=>s.level>=8},
+  {id:'net_1',     e:'🤝',n:'Connector',      d:'Add first contact',            ok:(s,a,c)=>c.length>=1},
+  {id:'net_10',    e:'🌐',n:'Networker',      d:'10 contacts in network',       ok:(s,a,c)=>c.length>=10},
+  {id:'net_25',    e:'🗺️',n:'Well Connected', d:'25 contacts in network',       ok:(s,a,c)=>c.length>=25},
+  {id:'net_reply', e:'💬',n:'Conversation',   d:'Got a reply from a contact',   ok:(s,a,c)=>c.some(x=>x.outreach==='Replied'||x.outreach==='Meeting')},
+  {id:'net_meet',  e:'☕',n:'Coffee Chat',    d:'Meeting booked with a contact',ok:(s,a,c)=>c.some(x=>x.outreach==='Meeting')},
+  {id:'followup',  e:'📅',n:'Organized',      d:'Set a follow-up reminder',     ok:(s,a,c)=>a.some(x=>x.followUp)||c.some(x=>x.followUp)},
+];
+const NET_TIPS=[
+  "Coffee chats are low-pressure and high-value. Reach out to someone new today.",
+  "Personalize every message — mention something specific about their work.",
+  "Follow up after 5–7 days if no response. Persistence is professional.",
+  "LinkedIn alumni search is a goldmine — people love helping fellow alumni.",
+  "Ask for advice, not a job. 'Can I get 15 min of your time?' gets more replies.",
+  "After an interview, connect with everyone you met on LinkedIn same day.",
+  "People who refer candidates often get bonuses — let contacts know you're looking.",
+];
 
-  /* ── Levels ── */
-  const LEVELS = [
-    {level:1,  name:"Rookie Applicant",  xpNeeded:100},
-    {level:2,  name:"Resume Warrior",    xpNeeded:250},
-    {level:3,  name:"Application Pro",   xpNeeded:500},
-    {level:4,  name:"Interview Hunter",  xpNeeded:800},
-    {level:5,  name:"Networking Ninja",  xpNeeded:1200},
-    {level:6,  name:"Industry Expert",   xpNeeded:1800},
-    {level:7,  name:"Offer Magnet",      xpNeeded:2500},
-    {level:8,  name:"Career Champion",   xpNeeded:Infinity},
-  ];
+async function sha256(m){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return Array.from(new Uint8Array(b)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+const today=()=>new Date().toISOString().slice(0,10);
+const weekS=()=>{const d=new Date();d.setDate(d.getDate()-d.getDay());return d.toISOString().slice(0,10);};
+const weekE=()=>{const d=new Date();d.setDate(d.getDate()+(6-d.getDay()));return d.toISOString().slice(0,10);};
+const inWeek=s=>s>=weekS()&&s<=weekE();
+const isOD=s=>s&&s<today();
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fmt=s=>{if(!s)return'';const d=new Date(s+'T00:00:00');return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});};
+const getLvl=xp=>{for(let i=LEVELS.length-1;i>=0;i--)if(i===0||xp>=(LEVELS[i-1]?.xp||0))return LEVELS[i];return LEVELS[0];};
+const initials=n=>(n||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
 
-  /* ── Badges ── */
-  const BADGES = [
-    {id:'first_app',  emoji:'🎯', name:'First Shot',      desc:'Submit your 1st application',  check:(s,a)=>a.length>=1},
-    {id:'app_5',      emoji:'🖐️', name:'High Five',       desc:'5 applications sent',           check:(s,a)=>a.length>=5},
-    {id:'app_25',     emoji:'📝', name:'Prolific',         desc:'25 applications sent',          check:(s,a)=>a.length>=25},
-    {id:'app_50',     emoji:'🚀', name:'Rocket Launch',   desc:'50 applications sent',          check:(s,a)=>a.length>=50},
-    {id:'app_100',    emoji:'💯', name:'Century',          desc:'100 applications!',             check:(s,a)=>a.length>=100},
-    {id:'streak_3',   emoji:'🔥', name:'On Fire',          desc:'3-day streak',                  check:(s,a)=>s.streak>=3},
-    {id:'streak_7',   emoji:'⚡', name:'Lightning',        desc:'7-day streak',                  check:(s,a)=>s.streak>=7},
-    {id:'streak_30',  emoji:'💎', name:'Diamond',          desc:'30-day streak',                 check:(s,a)=>s.streak>=30},
-    {id:'phone',      emoji:'📞', name:'Phone Pro',        desc:'First phone screen',            check:(s,a)=>a.some(x=>x.status==='Phone Screen')},
-    {id:'interview',  emoji:'💼', name:'Interview Ready',  desc:'Got your first interview',      check:(s,a)=>a.some(x=>x.status==='Interview')},
-    {id:'offer',      emoji:'🏆', name:'The Dream',        desc:'You got an offer!',             check:(s,a)=>a.some(x=>x.status==='Offer')},
-    {id:'level_3',    emoji:'🌟', name:'Rising Star',      desc:'Reached Level 3',               check:(s,a)=>s.level>=3},
-    {id:'level_5',    emoji:'👑', name:'Elite',            desc:'Reached Level 5',               check:(s,a)=>s.level>=5},
-    {id:'level_8',    emoji:'🦄', name:'Legendary',        desc:'Max Level 8 reached',           check:(s,a)=>s.level>=8},
-    {id:'recruiter',  emoji:'🤝', name:'Networker',        desc:'Added a recruiter contact',     check:(s,a)=>a.some(x=>x.recName)},
-    {id:'followup',   emoji:'📅', name:'Organized',        desc:'Set a follow-up reminder',      check:(s,a)=>a.some(x=>x.followUp)},
-  ];
+function toast(icon,title,sub,color='var(--blue)'){
+  const c=document.getElementById('toasts'),t=document.createElement('div');
+  t.className='toast';t.style.borderLeftColor=color;
+  t.innerHTML=`<div class="t-icon">${icon}</div><div><div class="t-title">${title}</div><div class="t-sub">${sub}</div></div>`;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(50px)';t.style.transition='all .3s';setTimeout(()=>t.remove(),300);},3500);
+}
+function confetti(){
+  const cv=document.getElementById('confetti-canvas'),ctx=cv.getContext('2d');
+  cv.width=innerWidth;cv.height=innerHeight;
+  const P=[],cols=['#3b5bdb','#2f9e44','#e67700','#6741d9','#0c8599'];
+  for(let i=0;i<100;i++)P.push({x:Math.random()*cv.width,y:-10,r:Math.random()*7+3,d:Math.random()*6+2,c:cols[i%cols.length],a:Math.random()*Math.PI*2});
+  let f=0;function draw(){ctx.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{ctx.beginPath();ctx.fillStyle=p.c;ctx.ellipse(p.x,p.y,p.r,p.r/2,p.a,0,2*Math.PI);ctx.fill();p.y+=p.d;p.x+=Math.sin(f/15+p.a)*1.5;p.a+=.04;});f++;if(f<100)requestAnimationFrame(draw);else ctx.clearRect(0,0,cv.width,cv.height);}draw();
+}
 
-  const QUOTES = [
-    "Every application is one step closer to your dream job. 💪",
-    "The only way to do great work is to love what you do. Keep applying!",
-    "Your future employer is out there. Make today count! 🚀",
-    "Rejection is just redirection. Keep going! 🔥",
-    "Success is the sum of small efforts, repeated day in and day out.",
-    "You miss 100% of the jobs you don't apply for. 🎯",
-    "Every expert was once a beginner. Your perseverance matters.",
-    "The job search is a marathon, not a sprint. Pace yourself! 🏃",
-    "Great things never came from comfort zones. Apply boldly!",
-    "Today's effort is tomorrow's opportunity. Keep pushing! ⭐",
-  ];
+/* LOGIN */
+window.doLogin=async function(){
+  const pw=document.getElementById('pw-input').value;
+  if(await sha256(pw)===PW_HASH){if(document.getElementById('remember-cb').checked)localStorage.setItem('jq_auth','true');startApp();}
+  else{document.getElementById('login-err').textContent='Incorrect password.';document.getElementById('pw-input').value='';}
+};
+document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')window.doLogin();});
 
-  /* ── Utils ── */
-  async function sha256(msg) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  }
+/* NAV */
+window.setPage=function(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+  const titles={dashboard:'Dashboard',applications:'Applications',network:'Network',achievements:'Achievements'};
+  document.getElementById('topbar-title').textContent=titles[name];
+  const ab=document.getElementById('topbar-add-btn');
+  if(name==='network'){ab.textContent='+ Add Contact';ab.onclick=openContactModal;}
+  else{ab.textContent='+ Add Application';ab.onclick=openAppModal;}
+  if(name==='achievements')renderBadges();
+};
+window.setPageByName=function(name){
+  document.querySelectorAll('.nav-item').forEach(b=>{if((b.getAttribute('onclick')||'').includes("'"+name+"'"))setPage(name,b);});
+};
 
-  function todayStr() { return new Date().toISOString().slice(0,10); }
+/* STATS */
+async function loadStats(){
+  const snap=await getDoc(doc(db,'stats','main'));
+  if(snap.exists())stats={...stats,...snap.data()};
+  const lg=localStorage.getItem('jq_goal');if(lg)stats.weeklyGoal=parseInt(lg)||10;
+  const lng=localStorage.getItem('jq_net_goal');if(lng)stats.netWeeklyGoal=parseInt(lng)||5;
+  document.getElementById('goal-num').value=stats.weeklyGoal;
+  document.getElementById('net-goal-num').value=stats.netWeeklyGoal;
+}
+async function saveStats(){await setDoc(doc(db,'stats','main'),stats,{merge:true});}
+async function addXP(n,msg){
+  const prev=getLvl(stats.xp).l;stats.xp+=n;
+  const lvl=getLvl(stats.xp);stats.level=lvl.l;
+  toast('⭐',`+${n} XP`,msg,'var(--blue)');
+  if(lvl.l>prev){confetti();toast('🏅','Level Up!',`You're now ${lvl.name}!`,'var(--amber)');}
+  renderXP();await saveStats();
+}
+function renderXP(){
+  const lvl=getLvl(stats.xp);
+  const prev=LEVELS.find(l=>l.l===lvl.l-1);
+  const px=prev?prev.xp:0;
+  const pct=lvl.xp===Infinity?100:Math.min(100,((stats.xp-px)/(lvl.xp-px))*100);
+  document.getElementById('sb-level').textContent=`${lvl.name}`;
+  document.getElementById('sb-xp').textContent=`${stats.xp} XP`;
+  document.getElementById('sb-xp-bar').style.width=pct+'%';
+  document.getElementById('sb-streak').textContent=stats.streak;
+  document.getElementById('ach-level').textContent=lvl.l;
+  document.getElementById('ach-level-name').textContent=lvl.name;
+  document.getElementById('ach-xp').textContent=stats.xp;
+  document.getElementById('ach-streak').textContent=stats.streak+' 🔥';
+  document.getElementById('ach-xp-bar').style.width=pct+'%';
+  document.getElementById('ach-xp-label').textContent=lvl.xp===Infinity?`${stats.xp} XP · MAX`:`${stats.xp} / ${lvl.xp} XP`;
+}
 
-  function weekStart() {
-    const d = new Date();
-    d.setDate(d.getDate() - d.getDay()); // Sunday
-    return d.toISOString().slice(0,10);
-  }
+/* GOALS */
+function renderGoals(){
+  const wa=apps.filter(a=>inWeek(a.date)).length;
+  const wc=contacts.filter(c=>inWeek(c.createdDate)).length;
+  const g=stats.weeklyGoal||10, ng=stats.netWeeklyGoal||5;
+  document.getElementById('goal-done').textContent=`${wa} / ${g} applications`;
+  document.getElementById('goal-bar').style.width=Math.min(100,(wa/g)*100)+'%';
+  document.getElementById('goal-hint').textContent=wa>=g?'🎉 Weekly goal crushed!':wa===0?'No applications this week yet.':(`${g-wa} more to reach your goal`);
+  document.getElementById('goal-week-range').textContent=`${fmt(weekS())} – ${fmt(weekE())}`;
+  document.getElementById('net-goal-done').textContent=`${wc} / ${ng} new contacts`;
+  document.getElementById('net-goal-bar').style.width=Math.min(100,(wc/ng)*100)+'%';
+  document.getElementById('net-goal-hint').textContent=wc>=ng?'🎉 Networking goal hit!':wc===0?'No new contacts this week — reach out!':(`${ng-wc} more contacts to hit your goal`);
+}
+window.updateGoal=function(){const v=parseInt(document.getElementById('goal-num').value)||10;stats.weeklyGoal=v;localStorage.setItem('jq_goal',v);renderGoals();saveStats();};
+window.updateNetGoal=function(){const v=parseInt(document.getElementById('net-goal-num').value)||5;stats.netWeeklyGoal=v;localStorage.setItem('jq_net_goal',v);renderGoals();saveStats();};
 
-  function weekEnd() {
-    const d = new Date();
-    d.setDate(d.getDate() + (6 - d.getDay())); // Saturday
-    return d.toISOString().slice(0,10);
-  }
+/* DASHBOARD */
+function renderDashboard(){
+  document.getElementById('d-total').textContent=apps.length;
+  ['Phone Screen','Interview','Offer','Rejected'].forEach(s=>{const id={'Phone Screen':'d-phone','Interview':'d-interview','Offer':'d-offer','Rejected':'d-rejected'}[s];document.getElementById(id).textContent=apps.filter(a=>a.status===s).length;});
+  document.getElementById('nudge-contacts').textContent=contacts.length;
+  document.getElementById('nudge-replied').textContent=contacts.filter(c=>c.outreach==='Replied'||c.outreach==='Meeting').length;
+  document.getElementById('ns-total').textContent=contacts.length;
+  document.getElementById('ns-replied').textContent=contacts.filter(c=>c.outreach==='Replied'||c.outreach==='Meeting').length;
+  document.getElementById('ns-meetings').textContent=contacts.filter(c=>c.outreach==='Meeting').length;
+  const odC=contacts.filter(c=>c.followUp&&isOD(c.followUp)&&c.outreach!=='Meeting').length;
+  const nb=document.getElementById('net-badge');
+  if(odC){nb.style.display='';nb.textContent=odC;}else nb.style.display='none';
+  const od=apps.filter(a=>a.followUp&&isOD(a.followUp)&&!['Offer','Rejected','Withdrawn'].includes(a.status));
+  const ob=document.getElementById('overdue-banner');
+  if(od.length){ob.classList.add('show');document.getElementById('overdue-text').innerHTML=`<strong>Follow-up overdue:</strong> ${od.map(a=>`${esc(a.company)}`).join(', ')}`;}
+  else ob.classList.remove('show');
+}
 
-  function isThisWeek(dateStr) {
-    return dateStr >= weekStart() && dateStr <= weekEnd();
-  }
+/* FUNNEL */
+function renderFunnel(){
+  const stages=['Applied','Phone Screen','Interview','Offer','Rejected'];
+  const cols=['#3b5bdb','#e67700','#6741d9','#2f9e44','#c92a2a'];
+  const data=stages.map(s=>apps.filter(a=>a.status===s).length);
+  const ctx=document.getElementById('funnel-chart').getContext('2d');
+  if(funnelChart)funnelChart.destroy();
+  funnelChart=new Chart(ctx,{type:'bar',data:{labels:stages,datasets:[{data,backgroundColor:cols.map(c=>c+'20'),borderColor:cols,borderWidth:2,borderRadius:6,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false},ticks:{precision:0,font:{family:'DM Sans',weight:'600'}}},
+              y:{grid:{display:false},ticks:{font:{family:'DM Sans',size:12,weight:'600'}}}}}});
+}
 
-  function isOverdue(dateStr) {
-    return dateStr && dateStr < todayStr();
-  }
-
-  function esc(s) {
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function formatDate(dateStr) {
-    if (!dateStr) return '';
-    const d = new Date(dateStr + 'T00:00:00');
-    return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  }
-
-  function getLevel(xp) {
-    for (let i=LEVELS.length-1;i>=0;i--) {
-      if (i===0 || xp>=(LEVELS[i-1]?.xpNeeded||0)) return LEVELS[i];
-    }
-    return LEVELS[0];
-  }
-
-  function showToast(emoji, title, sub, color='#ffd900') {
-    const tc = document.getElementById('toast-container');
-    const t  = document.createElement('div');
-    t.className = 'toast';
-    t.style.borderLeftColor = color;
-    t.innerHTML = `<div class="toast-icon">${emoji}</div><div class="toast-text"><div class="toast-title">${title}</div><div class="toast-sub">${sub}</div></div>`;
-    tc.appendChild(t);
-    setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateX(80px)'; t.style.transition='all .4s'; setTimeout(()=>t.remove(),400); }, 3500);
-  }
-
-  function launchConfetti() {
-    const canvas = document.getElementById('confetti-canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const particles = [];
-    const colors = ['#5c6ef8','#ff6b35','#ffd900','#58cc02','#9b59b6','#ff4b4b'];
-    for (let i=0;i<120;i++) particles.push({x:Math.random()*canvas.width,y:-10,r:Math.random()*8+4,d:Math.random()*8+2,color:colors[Math.floor(Math.random()*colors.length)],angle:Math.random()*Math.PI*2});
-    let frame=0;
-    function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      particles.forEach(p=>{ ctx.beginPath(); ctx.fillStyle=p.color; ctx.ellipse(p.x,p.y,p.r,p.r/2,p.angle,0,2*Math.PI); ctx.fill(); p.y+=p.d; p.x+=Math.sin(frame/20+p.angle)*2; p.angle+=.05; });
-      frame++;
-      if (frame<120) requestAnimationFrame(draw); else ctx.clearRect(0,0,canvas.width,canvas.height);
-    }
-    draw();
-  }
-
-  /* ── Login ── */
-  window.attemptLogin = async function() {
-    const pw = document.getElementById('password-input').value;
-    const hash = await sha256(pw);
-    if (hash===PASSWORD_HASH) {
-      if (document.getElementById('remember-check').checked) localStorage.setItem('jq_auth','true');
-      startApp();
-    } else {
-      document.getElementById('login-error').textContent = 'Incorrect password. Try again.';
-      document.getElementById('password-input').value = '';
-    }
-  };
-
-  document.getElementById('password-input').addEventListener('keydown', e=>{ if(e.key==='Enter') window.attemptLogin(); });
-
-  /* ── Stats ── */
-  async function loadStats() {
-    const ref  = doc(db,'stats','main');
-    const snap = await getDoc(ref);
-    if (snap.exists()) stats = {...stats,...snap.data()};
-    // Update streak
-    const today = todayStr();
-    if (stats.lastDay!==today) {
-      const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-      const yStr = yesterday.toISOString().slice(0,10);
-      if (stats.lastDay && stats.lastDay!==yStr) stats.streak=0;
-    }
-    // Load goal from localStorage too (instant)
-    const localGoal = localStorage.getItem('jq_goal');
-    if (localGoal) stats.weeklyGoal = parseInt(localGoal)||10;
-    document.getElementById('goal-input').value = stats.weeklyGoal;
-  }
-
-  async function saveStats() {
-    await setDoc(doc(db,'stats','main'), stats, {merge:true});
-  }
-
-  async function addXP(amount, label) {
-    const prev = getLevel(stats.xp).level;
-    stats.xp += amount;
-    const lvl  = getLevel(stats.xp);
-    stats.level = lvl.level;
-    showToast('⭐',`+${amount} XP`, label, '#5c6ef8');
-    if (lvl.level>prev) { launchConfetti(); showToast('🏅','Level Up!',`You're now a ${lvl.name}!`,'#ffd900'); }
-    renderLevelBar();
-    await saveStats();
-  }
-
-  function renderLevelBar() {
-    const lvl  = getLevel(stats.xp);
-    const prev = LEVELS.find(l=>l.level===lvl.level-1);
-    const prevXp = prev ? prev.xpNeeded : 0;
-    const pct  = lvl.xpNeeded===Infinity ? 100 : Math.min(100,((stats.xp-prevXp)/(lvl.xpNeeded-prevXp))*100);
-    document.getElementById('xp-bar').style.width = pct+'%';
-    document.getElementById('level-name-display').textContent = lvl.name;
-    document.getElementById('level-progress-label').textContent = `Level ${lvl.level}`;
-    document.getElementById('level-label').textContent = `Lv ${lvl.level}`;
-    document.getElementById('xp-count').textContent = stats.xp;
-    document.getElementById('xp-detail').textContent = lvl.xpNeeded===Infinity
-      ? `${stats.xp} XP — Max Level! 🦄`
-      : `${stats.xp} / ${lvl.xpNeeded} XP to Level ${lvl.level+1}`;
-  }
-
-  function renderGoalBar() {
-    const goal  = stats.weeklyGoal || 10;
-    const thisWeek = applications.filter(a=>isThisWeek(a.date)).length;
-    const pct   = Math.min(100,(thisWeek/goal)*100);
-    document.getElementById('goal-bar').style.width = pct+'%';
-    document.getElementById('goal-count-label').textContent = `${thisWeek} / ${goal} this week`;
-    document.getElementById('goal-week-label').textContent =
-      `Week of ${formatDate(weekStart())} – ${formatDate(weekEnd())}`;
-    document.getElementById('streak-count').textContent = stats.streak;
-    if (thisWeek>=goal && thisWeek-1<goal) {
-      showToast('🎯','Weekly Goal Reached!',`${goal} apps in a week — incredible!`,'#58cc02');
-      launchConfetti();
-    }
-  }
-
-  window.updateGoal = function() {
-    const val = parseInt(document.getElementById('goal-input').value)||10;
-    stats.weeklyGoal = val;
-    localStorage.setItem('jq_goal', val);
-    renderGoalBar();
-    saveStats();
-  };
-
-  /* ── Overdue check ── */
-  function renderOverdueBanner() {
-    const overdue = applications.filter(a=>a.followUp && isOverdue(a.followUp) && a.status!=='Offer' && a.status!=='Rejected' && a.status!=='Withdrawn');
-    const banner  = document.getElementById('overdue-banner');
-    const list    = document.getElementById('overdue-list');
-    if (overdue.length===0) { banner.classList.remove('visible'); return; }
-    banner.classList.add('visible');
-    list.textContent = overdue.map(a=>`${a.company} (${a.role}) — follow up by ${formatDate(a.followUp)}`).join(' · ');
-  }
-
-  /* ── Pipeline Chart ── */
-  function renderFunnelChart() {
-    const stages = ['Applied','Phone Screen','Interview','Offer','Rejected'];
-    const colors = ['#5c6ef8','#ffd900','#9b59b6','#58cc02','#ff4b4b'];
-    const data   = stages.map(s=>applications.filter(a=>a.status===s).length);
-    const ctx    = document.getElementById('funnel-chart').getContext('2d');
-    if (funnelChart) funnelChart.destroy();
-    funnelChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: stages,
-        datasets: [{
-          data,
-          backgroundColor: colors.map(c=>c+'cc'),
-          borderColor: colors,
-          borderWidth: 2,
-          borderRadius: 8,
-          borderSkipped: false,
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend:{display:false}, tooltip:{callbacks:{label:ctx=>`${ctx.parsed.x} application${ctx.parsed.x!==1?'s':''}`}} },
-        scales: {
-          x: { grid:{display:false}, ticks:{precision:0,font:{weight:'bold'}} },
-          y: { grid:{display:false}, ticks:{font:{size:13,weight:'bold'}} }
-        }
-      }
-    });
-  }
-
-  /* ── Dashboard ── */
-  function renderDashboard() {
-    const count = s=>applications.filter(a=>a.status===s).length;
-    document.getElementById('stat-total').textContent     = applications.length;
-    document.getElementById('stat-phone').textContent     = count('Phone Screen');
-    document.getElementById('stat-interview').textContent = count('Interview');
-    document.getElementById('stat-offer').textContent     = count('Offer');
-    document.getElementById('stat-rejected').textContent  = count('Rejected');
-  }
-
-  /* ── CRUD ── */
-  window.openModal = function(id=null) {
-    editingId = id;
-    document.getElementById('modal-title').textContent     = id ? '✏️ Edit Application' : '➕ Add Application';
-    document.getElementById('modal-save-btn').textContent  = id ? 'Save Changes' : 'Save Application';
-    if (id) {
-      const a = applications.find(x=>x.id===id);
-      document.getElementById('field-company').value      = a.company||'';
-      document.getElementById('field-role').value         = a.role||'';
-      document.getElementById('field-date').value         = a.date||todayStr();
-      document.getElementById('field-status').value       = a.status||'Applied';
-      document.getElementById('field-url').value          = a.url||'';
-      document.getElementById('field-followup').value     = a.followUp||'';
-      document.getElementById('field-rec-name').value     = a.recName||'';
-      document.getElementById('field-rec-email').value    = a.recEmail||'';
-      document.getElementById('field-rec-linkedin').value = a.recLinkedIn||'';
-      document.getElementById('field-notes').value        = a.notes||'';
-    } else {
-      ['field-company','field-role','field-url','field-followup','field-rec-name','field-rec-email','field-rec-linkedin','field-notes'].forEach(id=>document.getElementById(id).value='');
-      document.getElementById('field-date').value   = todayStr();
-      document.getElementById('field-status').value = 'Applied';
-    }
-    document.getElementById('modal-overlay').classList.add('open');
-    setTimeout(()=>document.getElementById('field-company').focus(),100);
-  };
-
-  window.closeModal = ()=>{ document.getElementById('modal-overlay').classList.remove('open'); editingId=null; };
-  window.closeModalOnBg = e=>{ if(e.target===document.getElementById('modal-overlay')) closeModal(); };
-
-  window.saveApplication = async function(e) {
-    e.preventDefault();
-    const data = {
-      company:   document.getElementById('field-company').value.trim(),
-      role:      document.getElementById('field-role').value.trim(),
-      date:      document.getElementById('field-date').value,
-      status:    document.getElementById('field-status').value,
-      url:       document.getElementById('field-url').value.trim(),
-      followUp:  document.getElementById('field-followup').value,
-      recName:   document.getElementById('field-rec-name').value.trim(),
-      recEmail:  document.getElementById('field-rec-email').value.trim(),
-      recLinkedIn: document.getElementById('field-rec-linkedin').value.trim(),
-      notes:     document.getElementById('field-notes').value.trim(),
-      updatedAt: new Date().toISOString(),
-    };
-    if (editingId) {
-      const old = applications.find(a=>a.id===editingId);
-      await updateDoc(doc(db,APPS_COL,editingId), data);
-      if (old.status!==data.status) {
-        const bonuses = {'Phone Screen':10,'Interview':20,'Offer':50};
-        const bonus   = bonuses[data.status]||0;
-        await addXP(5+bonus, `Status updated${bonus?` (+${bonus} bonus!)`:''}`)
-      }
-    } else {
-      data.createdAt = new Date().toISOString();
-      await addDoc(collection(db,APPS_COL), data);
-      // Streak — only increment once per day, only if yesterday was the last day
-      const today = todayStr();
-      if (stats.lastDay !== today) {
-        const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-        const yStr = yesterday.toISOString().slice(0, 10);
-        if (stats.lastDay === yStr) {
-          stats.streak++; // Consecutive day — extend streak
-        } else {
-          stats.streak = 1; // Gap in days — reset to 1 (today counts)
-        }
-        stats.lastDay = today;
-      }
-      await saveStats(); // persist streak + lastDay before addXP writes
-      await addXP(15,'New application submitted!');
-      renderGoalBar();
-    }
-    closeModal();
-  };
-
-  window.deleteApplication = async function(id) {
-    if (!confirm('Delete this application?')) return;
-    await deleteDoc(doc(db,APPS_COL,id));
-  };
-
-  /* ── Render Apps ── */
-  window.renderApps = function() {
-    const search = document.getElementById('search-input').value.toLowerCase();
-    const filter = document.getElementById('status-filter').value;
-    let filtered = applications.filter(a=>{
-      const m = !search || [a.company,a.role,a.notes,a.recName].some(f=>(f||'').toLowerCase().includes(search));
-      return m && (!filter||a.status===filter);
-    });
-    const grid = document.getElementById('apps-grid');
-    if (!filtered.length) {
-      grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🔍</div><div class="empty-title">${applications.length===0?'Ready for liftoff!':'No matches found'}</div><div class="empty-sub">${applications.length===0?'Add your first application to begin your quest!':'Try a different search or filter.'}</div></div>`;
-      return;
-    }
-    const sc = {Applied:'applied','Phone Screen':'phone',Interview:'interview',Offer:'offer',Rejected:'rejected',Withdrawn:'withdrawn'};
-    const bc = {Applied:'badge-applied','Phone Screen':'badge-phone',Interview:'badge-interview',Offer:'badge-offer',Rejected:'badge-rejected',Withdrawn:'badge-withdrawn'};
-    grid.innerHTML = filtered.map(a=>{
-      const od = a.followUp && isOverdue(a.followUp);
-      const recParts = [];
-      if (a.recName) recParts.push(`👤 ${esc(a.recName)}`);
-      if (a.recEmail) recParts.push(`<a href="mailto:${esc(a.recEmail)}">✉️ ${esc(a.recEmail)}</a>`);
-      if (a.recLinkedIn) { const url = a.recLinkedIn.startsWith('http')?a.recLinkedIn:'https://'+a.recLinkedIn; recParts.push(`<a href="${esc(url)}" target="_blank" rel="noopener">🔗 LinkedIn</a>`); }
-      return `<div class="app-card status-${sc[a.status]||'applied'}">
-        <div class="app-header-row">
-          <div class="app-company">${esc(a.company)}</div>
-          <span class="status-badge ${bc[a.status]||'badge-applied'}">${esc(a.status)}</span>
-        </div>
-        <div class="app-role">💼 ${esc(a.role)}</div>
-        <div class="app-meta">
-          <span>📅 ${formatDate(a.date)}</span>
-          ${a.followUp?`<span>⏰ ${formatDate(a.followUp)} ${od?'<span class="overdue-tag">OVERDUE</span>':''}</span>`:''}
-          ${a.url?`<span><a href="${esc(a.url)}" target="_blank" rel="noopener" style="color:var(--primary)">🔗 Listing</a></span>`:''}
-        </div>
-        ${recParts.length?`<div class="recruiter-row">${recParts.join('<span style="color:var(--border)">|</span>')}</div>`:''}
-        ${a.notes?`<div class="app-notes">${esc(a.notes)}</div>`:''}
-        <div class="app-actions">
-          <button class="btn-sm btn-edit" onclick="openModal('${a.id}')">✏️ Edit</button>
-          <button class="btn-sm btn-delete" onclick="deleteApplication('${a.id}')">🗑️ Delete</button>
-        </div>
-      </div>`;
-    }).join('');
-  };
-
-  /* ── CSV Export ── */
-  window.exportCSV = function() {
-    const cols = ['Company','Role','Date Applied','Status','Follow-up Date','Recruiter Name','Recruiter Email','Recruiter LinkedIn','URL','Notes'];
-    const rows = applications.map(a=>[a.company,a.role,a.date,a.status,a.followUp||'',a.recName||'',a.recEmail||'',a.recLinkedIn||'',a.url||'',a.notes||'']
-      .map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
-    const csv = [cols.join(','),...rows].join('\n');
-    const blob = new Blob([csv],{type:'text/csv'});
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `job-applications-${todayStr()}.csv`;
-    link.click();
-    showToast('⬇️','CSV Exported!',`${applications.length} applications downloaded`,'#58cc02');
-  };
-
-  /* ── Weekly Recap ── */
-  window.showRecapModal = function() {
-    const ws  = weekStart(), we = weekEnd();
-    const wApps = applications.filter(a=>isThisWeek(a.date));
-    const wInterviews = wApps.filter(a=>a.status==='Interview').length;
-    const wOffers     = wApps.filter(a=>a.status==='Offer').length;
-    document.getElementById('recap-week-label').textContent = `${formatDate(ws)} — ${formatDate(we)}`;
-    document.getElementById('recap-applied').textContent    = wApps.length;
-    document.getElementById('recap-interviews').textContent = wInterviews;
-    document.getElementById('recap-offers').textContent     = wOffers;
-    document.getElementById('recap-streak').textContent     = stats.streak;
-    const pct = Math.round((wApps.length/(stats.weeklyGoal||10))*100);
-    document.getElementById('recap-summary').textContent    =
-      wApps.length===0
-        ? "No applications yet this week — let's change that! 💪"
-        : `You applied to ${wApps.length} job${wApps.length!==1?'s':''} this week (${pct}% of your goal). You're at a ${stats.streak}-day streak. ${wInterviews>0?`Great news: ${wInterviews} interview${wInterviews!==1?'s':''} this week!`:'Keep applying — interviews are coming!'}`;
-    document.getElementById('recap-overlay').classList.add('open');
-  };
-
-  window.closeRecap = ()=>document.getElementById('recap-overlay').classList.remove('open');
-  window.closeRecapOnBg = e=>{ if(e.target===document.getElementById('recap-overlay')) closeRecap(); };
-
-  window.emailRecap = function() {
-    const ws   = weekStart(), we = weekEnd();
-    const wApps = applications.filter(a=>isThisWeek(a.date));
-    const subject = encodeURIComponent(`Job Quest Weekly Recap: ${formatDate(ws)} – ${formatDate(we)}`);
-    const lines = [
-      `📊 JOB QUEST WEEKLY RECAP`,
-      `Week: ${formatDate(ws)} – ${formatDate(we)}`,
-      '',
-      `✅ Applications sent: ${wApps.length}`,
-      `💼 Interviews: ${wApps.filter(a=>a.status==='Interview').length}`,
-      `🎉 Offers: ${wApps.filter(a=>a.status==='Offer').length}`,
-      `🔥 Current streak: ${stats.streak} days`,
-      `⭐ Total XP: ${stats.xp}`,
-      `🏅 Level: ${getLevel(stats.xp).name}`,
-      '',
-      wApps.length>0?`This week's applications:\n${wApps.map(a=>`  • ${a.company} — ${a.role} (${a.status})`).join('\n')}`:'No applications this week yet.',
-      '',
-      `Keep going! Every application is one step closer. 💪`,
-    ];
-    const body = encodeURIComponent(lines.join('\n'));
-    const a = document.createElement('a');
-    a.href = `mailto:?subject=${subject}&body=${body}`;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-
-  /* ── Achievements ── */
-  async function checkBadges() {
-    if (!stats.earnedBadges) stats.earnedBadges = [];
-    const prevEarned = new Set(stats.earnedBadges);
-    const nowEarned  = [];
-    let changed = false;
-
-    for (const badge of BADGES) {
-      if (badge.check(stats, applications)) {
-        nowEarned.push(badge.id);
-        if (!prevEarned.has(badge.id)) {
-          showToast(badge.emoji, `Badge: ${badge.name}!`, badge.desc, '#ffd900');
-          launchConfetti();
-          changed = true;
-        }
-      }
-    }
-
-    if (!changed && nowEarned.length !== stats.earnedBadges.length) changed = true;
-
-    stats.earnedBadges = nowEarned;
-    if (changed) await saveStats();
-    renderAchievements();
-  }
-
-  function renderAchievements() {
-    document.getElementById('achievements-grid').innerHTML = BADGES.map(b=>{
-      const earned = stats.earnedBadges&&stats.earnedBadges.includes(b.id);
-      return `<div class="badge-card ${earned?'unlocked':'locked'}" title="${b.desc}"><div class="badge-emoji">${b.emoji}</div><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;
-    }).join('');
-  }
-
-  /* ── Start ── */
-  async function startApp() {
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').style.display='block';
-    document.getElementById('quote-text').textContent = QUOTES[new Date().getDay()%QUOTES.length];
-    await loadStats();
-    renderLevelBar();
-    renderGoalBar();
-    const q = query(collection(db,APPS_COL), orderBy('createdAt','desc'));
-    onSnapshot(q, async snap=>{
-      applications = snap.docs.map(d=>({id:d.id,...d.data()}));
-      renderApps();
-      renderDashboard();
-      renderGoalBar();
-      renderFunnelChart();
-      renderOverdueBanner();
-      await checkBadges();
-    });
-  }
-
-  /* ── Init ── */
-  if (localStorage.getItem('jq_auth')==='true') startApp();
-
-  document.addEventListener('keydown', e=>{
-    if(e.key==='Escape'){ closeModal(); closeRecap(); }
-    if((e.ctrlKey||e.metaKey)&&e.key==='n'&&document.getElementById('app').style.display!=='none'){ e.preventDefault(); openModal(); }
+/* APPS */
+window.setFilter=function(btn){
+  activeFilter=btn.getAttribute('data-status');
+  document.querySelectorAll('#page-applications .fpill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');renderApps();
+};
+window.renderApps=function(){
+  const q=(document.getElementById('app-search')||{}).value?.toLowerCase()||'';
+  let list=apps.filter(a=>{
+    const m=!q||[a.company,a.role,a.notes,a.recName].some(f=>(f||'').toLowerCase().includes(q));
+    return m&&(!activeFilter||a.status===activeFilter);
   });
+  const el=document.getElementById('apps-list');
+  if(!list.length){el.innerHTML=`<div class="empty"><div class="ei">🔍</div><h3>${apps.length?'No matches':'Ready for liftoff!'}</h3><p>${apps.length?'Adjust your filters.':'Add your first application to start.'}</p></div>`;return;}
+  const cm={'Applied':'ch-Applied','Phone Screen':'ch-Phone','Interview':'ch-Interview','Offer':'ch-Offer','Rejected':'ch-Rejected','Withdrawn':'ch-Withdrawn'};
+  el.innerHTML=list.map(a=>`
+    <div class="app-row">
+      <div><div class="co-name">${esc(a.company)}${a.url?` <a href="${esc(a.url)}" target="_blank" style="font-size:11px;color:var(--blue);margin-left:4px">↗</a>`:''}</div><div class="role-text">${esc(a.role)}</div></div>
+      <div class="date-col"><div class="date-text">Applied ${fmt(a.date)}</div>${a.followUp?`<div class="followup-text">Follow up: ${fmt(a.followUp)}${isOD(a.followUp)?'<span class="overdue-chip">OVERDUE</span>':''}</div>`:''}</div>
+      <div class="status-col"><span class="status-chip ${cm[a.status]||'ch-Applied'}">${esc(a.status)}</span></div>
+      <div style="font-size:12px;color:var(--muted)">${a.recName?`👤 ${esc(a.recName)}`:''}</div>
+      <div class="row-actions"><button class="icon-btn" onclick="openAppModal('${a.id}')" title="Edit">✏️</button><button class="icon-btn del" onclick="delApp('${a.id}')" title="Delete">🗑️</button></div>
+    </div>`).join('');
+};
+
+window.openAppModal=function(id=null){
+  editAppId=id;
+  document.getElementById('app-modal-title').textContent=id?'Edit Application':'Add Application';
+  document.getElementById('app-save-btn').textContent=id?'Save Changes':'Save Application';
+  if(id){const a=apps.find(x=>x.id===id);document.getElementById('f-company').value=a.company||'';document.getElementById('f-role').value=a.role||'';document.getElementById('f-date').value=a.date||today();document.getElementById('f-status').value=a.status||'Applied';document.getElementById('f-url').value=a.url||'';document.getElementById('f-followup').value=a.followUp||'';document.getElementById('f-rec-name').value=a.recName||'';document.getElementById('f-rec-email').value=a.recEmail||'';document.getElementById('f-rec-li').value=a.recLinkedIn||'';document.getElementById('f-notes').value=a.notes||'';}
+  else{['f-company','f-role','f-url','f-followup','f-rec-name','f-rec-email','f-rec-li','f-notes'].forEach(i=>document.getElementById(i).value='');document.getElementById('f-date').value=today();document.getElementById('f-status').value='Applied';}
+  document.getElementById('app-overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('f-company').focus(),80);
+};
+window.closeAppModal=()=>{document.getElementById('app-overlay').classList.remove('open');editAppId=null;};
+window.closeBgApp=e=>{if(e.target===document.getElementById('app-overlay'))closeAppModal();};
+
+window.saveApp=async function(e){
+  e.preventDefault();
+  const data={company:document.getElementById('f-company').value.trim(),role:document.getElementById('f-role').value.trim(),date:document.getElementById('f-date').value,status:document.getElementById('f-status').value,url:document.getElementById('f-url').value.trim(),followUp:document.getElementById('f-followup').value,recName:document.getElementById('f-rec-name').value.trim(),recEmail:document.getElementById('f-rec-email').value.trim(),recLinkedIn:document.getElementById('f-rec-li').value.trim(),notes:document.getElementById('f-notes').value.trim(),updatedAt:new Date().toISOString()};
+  if(editAppId){
+    const old=apps.find(a=>a.id===editAppId);
+    await updateDoc(doc(db,'applications',editAppId),data);
+    if(old.status!==data.status){const bon={'Phone Screen':10,'Interview':20,'Offer':50};await addXP(5+(bon[data.status]||0),`Status → ${data.status}`);}
+  }else{
+    data.createdAt=new Date().toISOString();
+    await addDoc(collection(db,'applications'),data);
+    const t=today();
+    if(stats.lastDay!==t){const y=new Date();y.setDate(y.getDate()-1);const ys=y.toISOString().slice(0,10);stats.streak=stats.lastDay===ys?stats.streak+1:1;stats.lastDay=t;}
+    await saveStats();await addXP(15,'New application added!');
+  }
+  closeAppModal();
+};
+window.delApp=async function(id){if(!confirm('Delete this application?'))return;await deleteDoc(doc(db,'applications',id));};
+
+/* CONTACTS */
+window.setNetFilter=function(btn){
+  activeNetFilter=btn.getAttribute('data-out');
+  document.querySelectorAll('#page-network .fpill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');renderContacts();
+};
+window.renderContacts=function(){
+  const q=(document.getElementById('net-search')||{}).value?.toLowerCase()||'';
+  let list=contacts.filter(c=>{
+    const m=!q||[c.name,c.company,c.title,c.notes].some(f=>(f||'').toLowerCase().includes(q));
+    return m&&(!activeNetFilter||(c.outreach||'None')===activeNetFilter);
+  });
+  const el=document.getElementById('contacts-grid');
+  if(!list.length){
+    el.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ei">🤝</div><h3>${contacts.length?'No matches':'Start building your network'}</h3><p>${contacts.length?'Try a different filter.':'Add your first contact — a former colleague, alumni, or LinkedIn connection.'}</p>${contacts.length?'':'<button class="btn btn-green" onclick="openContactModal()" style="margin-top:4px">Add First Contact</button>'}</div>`;
+    return;
+  }
+  const oc={'None':'oc-None','Contacted':'oc-Contacted','Replied':'oc-Replied','Meeting':'oc-Meeting'};
+  const ol={'None':'Not contacted','Contacted':'Contacted','Replied':'Replied ✓','Meeting':'Meeting set 📅'};
+  el.innerHTML=list.map(c=>{
+    const od=c.followUp&&isOD(c.followUp)&&c.outreach!=='Meeting';
+    const links=[];
+    if(c.email)links.push(`<a href="mailto:${esc(c.email)}">✉️ ${esc(c.email)}</a>`);
+    if(c.linkedin){const u=c.linkedin.startsWith('http')?c.linkedin:'https://'+c.linkedin;links.push(`<a href="${esc(u)}" target="_blank" rel="noopener">🔗 LinkedIn</a>`);}
+    if(c.phone)links.push(`<a href="tel:${esc(c.phone)}">📞 ${esc(c.phone)}</a>`);
+    return `<div class="contact-card">
+      <div class="contact-top">
+        <div style="display:flex;align-items:center">
+          <div class="c-avatar">${initials(c.name)}</div>
+          <div>
+            <div class="c-name">${esc(c.name)}</div>
+            ${c.title?`<div class="c-title">${esc(c.title)}</div>`:''}
+            ${c.company?`<div class="c-company">${esc(c.company)}</div>`:''}
+          </div>
+        </div>
+        <div style="display:flex;gap:5px;flex-shrink:0">
+          <button class="icon-btn" onclick="openContactModal('${c.id}')" title="Edit">✏️</button>
+          <button class="icon-btn del" onclick="delContact('${c.id}')" title="Delete">🗑️</button>
+        </div>
+      </div>
+      ${c.notes?`<div class="c-notes">${esc(c.notes)}</div>`:''}
+      ${links.length?`<div class="c-links">${links.join('')}</div>`:''}
+      ${c.relationship?`<div style="font-size:11px;color:var(--muted);margin-bottom:10px">🔗 ${esc(c.relationship)}</div>`:''}
+      <div class="c-footer">
+        <span class="outreach-chip ${oc[c.outreach||'None']||'oc-None'}">${ol[c.outreach||'None']}</span>
+        ${c.followUp?`<div class="fu-due ${od?'od':''}">Follow up: ${fmt(c.followUp)}${od?' ⚠️':''}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.openContactModal=function(id=null){
+  editContactId=id;
+  document.getElementById('contact-modal-title').textContent=id?'Edit Contact':'Add Contact';
+  document.getElementById('contact-save-btn').textContent=id?'Save Changes':'Save Contact';
+  if(id){const c=contacts.find(x=>x.id===id);document.getElementById('c-name').value=c.name||'';document.getElementById('c-title').value=c.title||'';document.getElementById('c-company').value=c.company||'';document.getElementById('c-relationship').value=c.relationship||'';document.getElementById('c-email').value=c.email||'';document.getElementById('c-linkedin').value=c.linkedin||'';document.getElementById('c-phone').value=c.phone||'';document.getElementById('c-outreach').value=c.outreach||'None';document.getElementById('c-followup').value=c.followUp||'';document.getElementById('c-notes').value=c.notes||'';}
+  else{['c-name','c-title','c-company','c-email','c-linkedin','c-phone','c-followup','c-notes'].forEach(i=>document.getElementById(i).value='');document.getElementById('c-relationship').value='';document.getElementById('c-outreach').value='None';}
+  document.getElementById('contact-overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('c-name').focus(),80);
+};
+window.closeContactModal=()=>{document.getElementById('contact-overlay').classList.remove('open');editContactId=null;};
+window.closeBgContact=e=>{if(e.target===document.getElementById('contact-overlay'))closeContactModal();};
+
+window.saveContact=async function(e){
+  e.preventDefault();
+  const prevOut=editContactId?contacts.find(c=>c.id===editContactId)?.outreach:null;
+  const data={name:document.getElementById('c-name').value.trim(),title:document.getElementById('c-title').value.trim(),company:document.getElementById('c-company').value.trim(),relationship:document.getElementById('c-relationship').value,email:document.getElementById('c-email').value.trim(),linkedin:document.getElementById('c-linkedin').value.trim(),phone:document.getElementById('c-phone').value.trim(),outreach:document.getElementById('c-outreach').value,followUp:document.getElementById('c-followup').value,notes:document.getElementById('c-notes').value.trim(),updatedAt:new Date().toISOString()};
+  if(editContactId){
+    await updateDoc(doc(db,'contacts',editContactId),data);
+    if(prevOut!==data.outreach){const bon={Contacted:5,Replied:15,Meeting:25};const b=bon[data.outreach]||0;if(b)await addXP(b,`Outreach: ${data.outreach}!`);}
+  }else{
+    data.createdDate=today();data.createdAt=new Date().toISOString();
+    await addDoc(collection(db,'contacts'),data);
+    await addXP(10,'New contact added to network!');
+  }
+  closeContactModal();
+};
+window.delContact=async function(id){if(!confirm('Delete this contact?'))return;await deleteDoc(doc(db,'contacts',id));};
+
+/* BADGES */
+async function checkBadges(){
+  if(!stats.earnedBadges)stats.earnedBadges=[];
+  const prev=new Set(stats.earnedBadges);const now=[];let changed=false;
+  for(const b of BADGES){if(b.ok(stats,apps,contacts)){now.push(b.id);if(!prev.has(b.id)){toast(b.e,`Badge: ${b.n}!`,b.d,'var(--amber)');confetti();changed=true;}}}
+  if(!changed&&now.length!==stats.earnedBadges.length)changed=true;
+  stats.earnedBadges=now;if(changed)await saveStats();
+}
+function renderBadges(){
+  document.getElementById('badges-grid').innerHTML=BADGES.map(b=>{
+    const u=stats.earnedBadges?.includes(b.id);
+    return `<div class="badge-tile ${u?'unlocked':'locked'}"><div class="be">${b.e}</div><div class="bn">${b.n}</div><div class="bd">${b.d}</div></div>`;
+  }).join('');
+}
+
+/* RECAP */
+window.showRecap=function(){
+  const wa=apps.filter(a=>inWeek(a.date));
+  const wc=contacts.filter(c=>inWeek(c.createdDate));
+  document.getElementById('recap-range').textContent=`${fmt(weekS())} — ${fmt(weekE())}`;
+  document.getElementById('r-applied').textContent=wa.length;
+  document.getElementById('r-contacts').textContent=wc.length;
+  document.getElementById('r-interviews').textContent=wa.filter(a=>a.status==='Interview').length;
+  document.getElementById('r-streak').textContent=stats.streak;
+  document.getElementById('r-summary').textContent=`${wa.length} application${wa.length!==1?'s':''} and ${wc.length} new contact${wc.length!==1?'s':''} this week. ${stats.streak}-day streak. ${wa.length>=stats.weeklyGoal?'🎉 App goal hit!':''} ${wc.length>=stats.netWeeklyGoal?'🎉 Networking goal hit!':''}`;
+  document.getElementById('recap-overlay').classList.add('open');
+};
+window.closeRecap=()=>document.getElementById('recap-overlay').classList.remove('open');
+window.closeBgRecap=e=>{if(e.target===document.getElementById('recap-overlay'))closeRecap();};
+window.emailRecap=function(){
+  const wa=apps.filter(a=>inWeek(a.date));const wc=contacts.filter(c=>inWeek(c.createdDate));
+  const subj=encodeURIComponent(`Job Quest Recap: ${fmt(weekS())} – ${fmt(weekE())}`);
+  const body=encodeURIComponent([`JOB QUEST WEEKLY RECAP\n${fmt(weekS())} – ${fmt(weekE())}`,`\nApplications sent: ${wa.length}\nNew contacts: ${wc.length}\nInterviews: ${wa.filter(a=>a.status==='Interview').length}\nStreak: ${stats.streak} days\nXP: ${stats.xp}`,wa.length?`\nApplications:\n${wa.map(a=>`  • ${a.company} — ${a.role}`).join('\n')}`:'',`\nKeep going!`].join(''));
+  const a=document.createElement('a');a.href=`mailto:?subject=${subj}&body=${body}`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);
+};
+
+/* CSV */
+window.exportCSV=function(){
+  const h=['Company','Role','Date','Status','Follow-up','Recruiter','Email','LinkedIn','URL','Notes'];
+  const rows=apps.map(a=>[a.company,a.role,a.date,a.status,a.followUp||'',a.recName||'',a.recEmail||'',a.recLinkedIn||'',a.url||'',a.notes||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
+  const blob=new Blob([[h.join(','),...rows].join('\n')],{type:'text/csv'});
+  const l=document.createElement('a');l.href=URL.createObjectURL(blob);l.download=`job-quest-${today()}.csv`;l.click();
+  toast('⬇️','Exported!',`${apps.length} applications`,'var(--green)');
+};
+
+/* START */
+async function startApp(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('net-tip-text').textContent=NET_TIPS[new Date().getDay()%NET_TIPS.length];
+  await loadStats();renderXP();
+  onSnapshot(query(collection(db,'applications'),orderBy('createdAt','desc')),async snap=>{
+    apps=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderApps();renderDashboard();renderGoals();renderFunnel();await checkBadges();
+  });
+  onSnapshot(query(collection(db,'contacts'),orderBy('createdAt','desc')),async snap=>{
+    contacts=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderContacts();renderDashboard();renderGoals();await checkBadges();
+  });
+}
+
+if(localStorage.getItem('jq_auth')==='true')startApp();
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeAppModal();closeContactModal();closeRecap();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='n'&&document.getElementById('app').style.display!=='none'){e.preventDefault();openAppModal();}
+});
 </script>
 </body>
 </html>
